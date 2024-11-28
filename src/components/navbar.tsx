@@ -10,7 +10,7 @@ export function Navbar() {
                 <Entypo name="home" size={24} color="#520C87"/>
             </Link>
             <Link href="/pedidos">
-                <Image source={require('../assets/logo.png')} className="w-14 h-14"/>
+                <Image source={require('../assets/logo.png')} className="w-14 h-14 max-w-14 max-h-14" resizeMode="contain"/>
             </Link>
             <Link href="/perfil">
                 <MaterialCommunityIcons name="account" size={24} color="#520C87" />
