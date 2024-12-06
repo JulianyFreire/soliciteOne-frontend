@@ -12,7 +12,7 @@ export default function Pedidos() {
         <View className="flex-1">
             <View className="flex-row items-center p-5 mt-2 justify-center">
                 <Text className="text-4xl text-purple-800 w-64 font-medium">Cadastre sua solicitação</Text>
-                <Image source={require('../assets/logo.png')} className="w-24 h-24 max-w-24 max-h-24" resizeMode="contain"/>
+                <Image source={require('../assets/Image/Logo.png')} className="w-24 h-24 max-w-24 max-h-24" resizeMode="contain"/>
             </View>
             <View className="px-10 mt-4">
                 <Text className="text-sm font-semibold text-purple-800 p-2">Categoria</Text>

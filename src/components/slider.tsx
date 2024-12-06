@@ -11,12 +11,12 @@ export function Slider() {
                 showsPagination={false}
             >
                 <View>
-                    <Image source={require('../assets/banner1.png')}
+                    <Image source={require('../assets/Banners/banner1.png')}
                     className='max-h-56 max-w-full'
                     resizeMode="contain"/>
                 </View>
                 <View>
-                    <Image source={require('../assets/banner2.png')}
+                    <Image source={require('../assets/Banners/banner2.png')}
                     className='max-h-56 max-w-full'
                     resizeMode="contain"/>
                 </View>

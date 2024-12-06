@@ -3,12 +3,12 @@ import { Stats } from "../components/stats";
 import { Link } from "expo-router";
 import { Navbar } from "../components/navbar";
 
-export default function detalhes() {
+export default function Detalhes() {
   return (
     <View className="flex-1">
         <View className="flex-row items-center p-5 mt-2 justify-center">
             <Text className="text-4xl text-purple-800 w-64 font-medium">Detalhes da Solicitação</Text>
-            <Image source={require('../assets/logo.png')} className="w-24 h-24 max-w-24 max-h-24" resizeMode="contain"/>
+            <Image source={require('../assets/Image/Logo.png')} className="w-24 h-24 max-w-24 max-h-24" resizeMode="contain"/>
         </View>
         <View className="w-full p-10 flex-col gap-4 justify-start">
             <Text className="text-purple-800 font-semibold">Categoria: <Text className="font-normal">Limpeza</Text></Text>

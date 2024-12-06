@@ -6,7 +6,7 @@ export function Destaques() {
         <View className="mx-auto rounded-xl p-4 shadow-md bg-neutral-50">
             <View className="flex-row items-center justify-around">
                 <Image 
-                    source={require('../assets/Broom.png')}
+                    source={require('../assets/Icons/Broom.png')}
                 />
                 <Text className="text-lg font-semibold">Limpeza</Text>
             </View>
