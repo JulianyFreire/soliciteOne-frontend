@@ -20,7 +20,7 @@ export default function Detalhes() {
         <Stats />
         <View className= "flex flex-row gap-x-10 mx-auto"> 
           <TouchableOpacity className= "flex items-center justify-center w-40 h-14 mx-auto my-10 bg-purple-800 rounded-xl p-2">
-            <Link href="/home" className="text-purple-300 font-medium text-center">Cancelar Solicitação</Link>
+            <Link href="/" className="text-purple-300 font-medium text-center">Cancelar Solicitação</Link>
           </TouchableOpacity>
       
           <TouchableOpacity className="flex items-center justify-center w-40 h-14 mx-auto my-10 bg-purple-300 rounded-xl p-2">

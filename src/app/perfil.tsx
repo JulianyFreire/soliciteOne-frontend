@@ -26,6 +26,10 @@ export default function Perfil() {
                 <Image source={require('../assets/Icons/Headset.png')} className="m-4 w-15 h-15 max-w-15 max-h-15"/>
                 <Text>Suporte</Text>
             </View>
+            <View className="border-t border-purple-600 py-2 flex-row items-center">
+                <Image source={require('../assets/Icons/Headset.png')} className="m-4 w-15 h-15 max-w-15 max-h-15"/>
+                <Link href="/cadastro">Cadastre sua conta</Link>
+            </View>
             <View className="border-t border-purple-600 py-2"></View>
             <Navbar />
         </View>

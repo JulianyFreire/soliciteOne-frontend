@@ -6,7 +6,7 @@ import { Destaques } from "../components/destaques";
 import { Cards } from "../components/cards";
 import Swiper from 'react-native-swiper';
 
-export default function Home() {
+export default function Index() {
 
     return (
         <View className="flex-1">

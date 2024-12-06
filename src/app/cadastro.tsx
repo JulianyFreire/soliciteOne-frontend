@@ -24,7 +24,7 @@ export default function Cadastro() {
                 <TextInput className="border border-purple-800 rounded-xl p-3 mb-2" placeholder="Senha"></TextInput>
             </View>
             <TouchableOpacity className=" flex items-center justify-center w-40 h-14 mx-auto my-10 bg-purple-300 rounded-xl p-3">
-                <Link href="/home" className="text-2xl text-purple-800">Cadastrar</Link>
+                <Link href="/login" className="text-2xl text-purple-800">Cadastrar</Link>
             </TouchableOpacity>
         </View>
     );
