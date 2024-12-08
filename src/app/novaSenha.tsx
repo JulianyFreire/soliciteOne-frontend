@@ -10,11 +10,11 @@ export default function RecuperarSenha() {
             </View>
             <View className="flex-col justify-center items-center my-48">
                 <View className="w-80">
-                    <Text className="text-sm font-semibold text-purple-800 mb-2">Senha</Text>
-                    <TextInput className="border border-purple-800 rounded-xl p-3 mb-4" placeholder="Digite a senha"/>
+                    <Text className="text-sm font-semibold text-purple-800 mb-2">Codigo de recuperação</Text>
+                    <TextInput className="border border-purple-800 rounded-xl p-3 mb-4" placeholder="Recuperação"/>
 
-                    <Text className="text-sm font-semibold text-purple-800 mb-2">Confirmar senha</Text>
-                    <TextInput className="border border-purple-800 rounded-xl p-3 mb-4" placeholder="Digite a senha"/>
+                    <Text className="text-sm font-semibold text-purple-800 mb-2">Nova Senha</Text>
+                    <TextInput className="border border-purple-800 rounded-xl p-3 mb-4" placeholder="Nova senha"/>
 
                     <View className="flex-1 justify-center items-center mt-20">
                         <TouchableOpacity className="flex items-center justify-center w-48 h-14 bg-purple-300 rounded-xl">

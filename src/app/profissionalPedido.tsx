@@ -40,12 +40,12 @@ export default function ProfissionalPedido() {
                         <Text className="text-purple-600 ml-2">{data.orcamento}</Text>
                     </View>
                     <View className= "flex-row gap-10 mx-auto"> 
-                        <TouchableOpacity className= "flex items-center justify-center w-36 h-12 mx-auto my-10 bg-purple-800 rounded-xl px-3">
-                            <Link href="/" className="text-purple-300 font-medium text-center">Cancelar Solicitação</Link>
+                        <TouchableOpacity className= "flex items-center justify-center w-36 h-12 mx-auto my-10 bg-purple-300 rounded-xl px-3">
+                            <Link href="/detalhes" className="text-purple-800 font-medium text-center">Cancelar Solicitação</Link>
                         </TouchableOpacity>
                     
-                        <TouchableOpacity className="flex items-center justify-center w-36 h-12 mx-auto my-10 bg-purple-300 rounded-xl px-1">
-                            <Link href="/" className="text-purple-800 font-medium text-center">Aceitar Orçamento</Link>
+                        <TouchableOpacity className="flex items-center justify-center w-36 h-12 mx-auto my-10 bg-purple-800 rounded-xl px-1">
+                            <Link href="/" className="text-purple-300 font-medium text-center">Aceitar Orçamento</Link>
                         </TouchableOpacity>
                     </View>
                 </View>

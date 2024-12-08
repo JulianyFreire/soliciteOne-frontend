@@ -16,7 +16,7 @@ export default function Pedidos() {
             </View>
             <View className="px-10 mt-4">
                 <Text className="text-sm font-semibold text-purple-800 p-2">Categoria</Text>
-                    <View className="border border-purple-800 rounded-xl mb-2">
+                    <View className="border border-purple-800 rounded-xl mb-2 p-2">
                         <Picker
                             className=""
                             selectedValue={categoria}
@@ -34,8 +34,6 @@ export default function Pedidos() {
                 <TextInput className="border border-purple-800 rounded-xl p-3 mb-2" placeholder="Data e horário disponíevel"></TextInput>
                 <Text className="text-sm font-semibold text-purple-800 p-2">Descrição</Text>
                 <TextInput className="border border-purple-800 rounded-xl p-3 text-wrap mb-2 h-28" placeholder="Descreva a situação do seu problema para uma solicitação mais efetica" multiline={true}></TextInput>
-                <Text className="text-sm font-semibold text-purple-800 p-2">Imagens</Text>
-                <TextInput className="border border-purple-800 rounded-xl p-3 mb-2" placeholder="Adicionar imagem"></TextInput>
                 <TouchableOpacity className=" flex items-center justify-center w-40 h-14 mx-auto my-10 bg-purple-300 rounded-xl p-3">
                     <Link href="/detalhes" className="text-2xl text-purple-800">Solicitar</Link>
                 </TouchableOpacity>
