@@ -15,18 +15,16 @@ export default function Detalhes() {
             <Text className="text-purple-800 font-semibold">Endereço: <Text className="font-normal">Centro, rua meio, 45</Text></Text>
             <Text className="text-purple-800 font-semibold">Disponibilidade: <Text className="font-normal">Sábados e Domingos pela manhã</Text></Text>
             <Text className="text-purple-800 font-semibold">Descrição: <Text className="font-normal">fazer fachina em uma casa com 5 comodos</Text></Text>
-            <Text className="text-purple-800 font-semibold mb-40">Imagens</Text>
         </View>
-        <Stats />
-        <View className= "flex flex-row gap-x-10 mx-auto"> 
-          <TouchableOpacity className= "flex items-center justify-center w-40 h-14 mx-auto my-10 bg-purple-800 rounded-xl p-2">
-            <Link href="/home" className="text-purple-300 font-medium text-center">Cancelar Solicitação</Link>
+        <Stats /> 
+        <View className="flex justify-end w-80 h-20 border mx-auto border-purple-800 rounded-b-lg">
+          <View className="flex-row justify-end items-center p-2 h-8 bg-purple-800 rounded-b-lg">
+            <Link href="/profissionalPedido" className="text-purple-300">Detalhar</Link>
+          </View>
+        </View>
+          <TouchableOpacity className= "flex items-center justify-center w-40 h-14 ml-5 mt-48  bg-purple-800 rounded-xl p-2">
+            <Link href="/" className="text-purple-300 font-medium text-center">Cancelar Solicitação</Link>
           </TouchableOpacity>
-      
-          <TouchableOpacity className="flex items-center justify-center w-40 h-14 mx-auto my-10 bg-purple-300 rounded-xl p-2">
-            <Link href="/pedidos" className="text-purple-800 font-medium text-center">Solicitações Anteriores</Link>
-          </TouchableOpacity>
-      </View>
     <Navbar/>
     </View>
   )

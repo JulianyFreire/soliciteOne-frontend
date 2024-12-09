@@ -1,10 +1,16 @@
-import { Text, View, Image} from "react-native";
+import { Text, View, Image, Linking, TouchableOpacity} from "react-native";
 import { Navbar } from "../components/navbar";
 import { Link } from "expo-router";
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function Perfil() {
     const userData = {
         nome: "Nome Sobrenome",
+    };
+
+    const openWhatsApp = () => {
+        const url = 'https://wa.me/'; // Substitua com o número do WhatsApp
+        Linking.openURL(url);
     };
      
     return (
@@ -23,8 +29,14 @@ export default function Perfil() {
                 <Link href="/dadosPessoais">Dados Pessoais</Link>
             </View>
             <View className="border-t border-purple-600 py-2 flex-row items-center">
+                <TouchableOpacity onPress={openWhatsApp} className="flex-row items-center">
+                    <Image source={require('../assets/Icons/Headset.png')} className="m-4 w-15 h-15 max-w-15 max-h-15"/>
+                    <Text>Suporte</Text>
+                </TouchableOpacity>
+            </View>
+            <View className="border-t border-purple-600 py-2 flex-row items-center">
                 <Image source={require('../assets/Icons/Headset.png')} className="m-4 w-15 h-15 max-w-15 max-h-15"/>
-                <Text>Suporte</Text>
+                <Link href="/login">Sair</Link>
             </View>
             <View className="border-t border-purple-600 py-2"></View>
             <Navbar />
