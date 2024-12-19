@@ -4,30 +4,76 @@ import { Slider } from "../components/slider";
 import { Stats } from "../components/stats";
 import { Destaques } from "../components/destaques";
 import Swiper from 'react-native-swiper';
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useAuth } from "../context/authContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 export default function Index() {
 
-    const data = [
-        { categoria: "Diarista", icon: require('../assets/Icons/Broom.png') },
-        { categoria: "Jardineiro", icon: require('../assets/Icons/Broom.png') },
-        { categoria: "Eletricista", icon: require('../assets/Icons/Broom.png') },
-        { categoria: "Pedreiro", icon: require('../assets/Icons/Broom.png') },
-    ];
+    interface Solicitation {
+        user: string;
+        category: {
+          _id: string;
+          name: string;
+        };
+        address: string;
+        disponibility: string;
+        description: string;
+        status: string;
+      }
 
-    const [pedidos, setPedidos] = useState(false)
+      interface Category {
+        _id: string;
+        name: string;
+      }
 
+      
+      
+        
+    const { isLoggedIn } = useAuth();
+    const [solicitation, setSolicitation] = useState<Solicitation | null>(null);
+    const [categories, setCategories] = useState<Category[]>([]);
+
+    useEffect(() => {
+        const fetchSolicitation = async () => {
+          try {
+            const token = await AsyncStorage.getItem("token");
+            const { data: solicitationData } = await axios.get("https://api.soliciteapp.com.br/solicitations/current", {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+            setSolicitation(solicitationData);
+          } catch (error) {
+            console.error('Erro ao buscar categorias:', error);
+          }
+        };
+      
+        fetchSolicitation();
+      }, []);
+
+      useEffect(() => {
+        axios.get('https://api.soliciteapp.com.br/categories') // URL da API para categorias
+          .then(response => {
+            setCategories(response.data); // Armazena as categorias no estado
+          })
+          .catch(error => {
+            console.error("Erro ao buscar categorias:", error);
+          });
+      }, []);
+
+      
     return (
         <View className="flex-1">
             <ScrollView>
 
                 <Slider/>
-                {pedidos ? (<Stats />) : null}
+                {solicitation && isLoggedIn ? (<Stats />) : null}
                 <View className="w-96 mx-auto">
                     <Text className="text-xl font-semibold text-purple-700 mt-8 mb-3">Serviços:</Text>
                     <View className="flex flex-wrap flex-row gap-4">
-                        {data.map((item, index) => (
-                            <Destaques key={index} categoria={item.categoria} icon={item.icon} />
+                        {categories.map((categories) => (
+                            <Destaques key={categories._id} categoria={categories.name} />
                         ))}
                     </View>
                 </View>
@@ -40,7 +86,7 @@ export default function Index() {
                                 <Text className="text-md font-semibold text-center text-purple-800 mb-2">
                                     Solicitação
                                 </Text>
-                                <Text className="text-justify">
+                                <Text className="text-justify text-xs">
                                     Escolha o serviço que você precisa, iremos recomendar um dos nossos profissionais e faça sua solicitação
                                 </Text>
                             </View>
@@ -51,7 +97,7 @@ export default function Index() {
                                 <Text className="text-md font-semibold text-center text-purple-800 mb-2">
                                     Duvidas?
                                 </Text>
-                                <Text className="text-justify my-auto">
+                                <Text className="text-justify text-xs">
                                     Entre em contato com o nosso atendimento online através do nosso <Text className="text-purple-800">Whatsapp</Text>.
                                 </Text>
                             </View>

@@ -1,15 +1,18 @@
 import "../styles/global.css"; 
 import { Slot } from "expo-router";
+import { useFonts } from "expo-font";
 import {
-  useFonts,
+  Poppins_300Light,
   Poppins_400Regular,
   Poppins_500Medium,
   Poppins_600SemiBold
 } from "@expo-google-fonts/poppins"
+import { AuthProvider } from "../context/authContext";
 
 export default function Layout() {
 
   const [fontsLoaded] = useFonts({
+    Poppins_300Light,
     Poppins_400Regular,
     Poppins_500Medium,
     Poppins_600SemiBold
@@ -20,6 +23,8 @@ export default function Layout() {
   }
 
   return (
-      <Slot />
+      <AuthProvider>
+        <Slot />
+      </AuthProvider>
   )
 }

@@ -1,17 +1,19 @@
 import { Link } from "expo-router";
 import { useState } from "react";
 import { Image, Text, View, TouchableOpacity } from "react-native";
+import { useAuth } from "../context/authContext";
 
-export function Destaques({categoria, icon}: any) {
+export function Destaques({categoria}: any) {
 
 
-    const [isLoggedIn, setIsLoggedIn] = useState(false)
+    const { isLoggedIn } = useAuth()
 
     return (
         <View className="mx-auto rounded-xl p-4 shadow-md bg-neutral-50">
             <View className="flex-row items-center justify-around">
                 <Image 
-                    source={icon}
+                    
+                    className="hidden"
                 />
                 <Text className="text-lg font-semibold">{categoria}</Text>
                

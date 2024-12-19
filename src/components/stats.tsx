@@ -8,7 +8,7 @@ export function Stats() {
             <View className="w-full bg-gray-200 rounded-full h-2.5">
                 <View className="bg-purple-500 h-2.5 rounded-full w-[45%]"></View>
             </View>
-            <Text className="text-center">Profissional encontrado</Text>
+            <Link href="/detalhes" className="text-center">Procurando Profissional</Link>
         </View>
     )
 }
