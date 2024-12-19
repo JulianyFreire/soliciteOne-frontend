@@ -1,12 +1,12 @@
 import { Text, View, Image, Linking, TouchableOpacity} from "react-native";
 import { Navbar } from "../components/navbar";
 import { Link } from "expo-router";
+import { useAuth } from "../context/authContext";
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function Perfil() {
-    const userData = {
-        nome: "Nome Sobrenome",
-    };
+
+    const { user, logout } = useAuth()
 
     const openWhatsApp = () => {
         const url = 'https://wa.me/'; // Substitua com o número do WhatsApp
@@ -19,7 +19,7 @@ export default function Perfil() {
                 <View className="w-24 h-24 bg-white rounded-full flex justify-center items-center">
                     <Image source={require('../assets/Icons/User.png')} className="w-16 h-16"/>
                 </View>
-                <Text className="text-white text-lg font-medium mt-4">{userData.nome}</Text>
+                <Text className="text-white text-lg font-medium mt-4">{user?.name || 'Nome do Usuário'}</Text>
             </View>
             <View className="justify-center items-center">
                 <Image source={require('../assets/Image/Logotipo.png')} className="w-20 h-20 max-w-20 max-h-20"/>
@@ -35,8 +35,10 @@ export default function Perfil() {
                 </TouchableOpacity>
             </View>
             <View className="border-t border-purple-600 py-2 flex-row items-center">
-                <Image source={require('../assets/Icons/Headset.png')} className="m-4 w-15 h-15 max-w-15 max-h-15"/>
-                <Link href="/login">Sair</Link>
+                <TouchableOpacity onPress={logout} className="flex-row items-center">
+                    <Image source={require('../assets/Icons/Headset.png')} className="m-4 w-15 h-15 max-w-15 max-h-15"/>
+                    <Text>Sair</Text>
+                </TouchableOpacity>
             </View>
             <View className="border-t border-purple-600 py-2"></View>
             <Navbar />

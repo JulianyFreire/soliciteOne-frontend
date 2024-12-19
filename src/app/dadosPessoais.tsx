@@ -1,17 +1,12 @@
 import { Text, View, Image, ScrollView } from "react-native";
 import { Navbar } from "../components/navbar";
+import { useAuth } from "../context/authContext";
+
 
 
 export default function DadosPessoais() {
     // Dados do usuário
-    const userData = {
-        nome: "Nome Sobrenome",
-        cpf: "000.000.000-00",
-        email: "example@email.com",
-        telefone: "(84) 9999-9999",
-        endereco: "Centro, rua meio, 45",
-        cidade: "Currais Novos",
-    };
+    const { user } = useAuth();
 
     return (
         <View className="flex-1">
@@ -23,27 +18,23 @@ export default function DadosPessoais() {
                 <View className="bg-gray p-8 rounded-xl w-96 mx-auto mt-10 bg-gray-100 shadow-lg">
                     <View className="flex-row mb-6">
                         <Text className="text-purple-800 font-bold">Nome:</Text>
-                        <Text className="text-purple-600 ml-2">{userData.nome}</Text>
+                        <Text className="text-purple-600 ml-2">{user?.name}</Text>
                     </View>
                     <View className="flex-row mb-6">
                         <Text className="text-purple-800 font-bold">CPF:</Text>
-                        <Text className="text-purple-600 ml-2">{userData.cpf}</Text>
+                        <Text className="text-purple-600 ml-2">{user?.document}</Text>
                     </View>
                     <View className="flex-row mb-6">
                         <Text className="text-purple-800 font-bold">Email:</Text>
-                        <Text className="text-purple-600 ml-2">{userData.email}</Text>
+                        <Text className="text-purple-600 ml-2">{user?.email}</Text>
                     </View>
                     <View className="flex-row mb-6">
                         <Text className="text-purple-800 font-bold">Telefone:</Text>
-                        <Text className="text-purple-600 ml-2">{userData.telefone}</Text>
-                    </View>
-                    <View className="flex-row mb-6">
-                        <Text className="text-purple-800 font-bold">Endereço:</Text>
-                        <Text className="text-purple-600 ml-2">{userData.endereco}</Text>
+                        <Text className="text-purple-600 ml-2">{user?.phone}</Text>
                     </View>
                     <View className="flex-row mb-6">
                         <Text className="text-purple-800 font-bold">Cidade:</Text>
-                        <Text className="text-purple-600 ml-2">{userData.cidade}</Text>
+                        <Text className="text-purple-600 ml-2">cidade</Text>
                     </View>
                 </View>
             </ScrollView>

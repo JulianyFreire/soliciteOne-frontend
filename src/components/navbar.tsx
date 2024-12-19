@@ -1,12 +1,14 @@
 import { Image, View } from "react-native";
+
 import Entypo from '@expo/vector-icons/Entypo';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Link } from "expo-router";
-import { useState } from "react";
+import React from "react";
+import { useAuth } from '../context/authContext';
 
 export function Navbar() {
 
-    const [isLoggedIn, setIsLoggedIn] = useState(true)
+    const { isLoggedIn } = useAuth()
 
     return (
         <View className="flex-row absolute bottom-0 left-0 right-0 h-16 justify-around items-center bg-white border-t border-purple-600 py-2">
@@ -22,6 +24,7 @@ export function Navbar() {
                         <MaterialCommunityIcons name="account" size={28} color="#520C87" />
                     </Link> 
                 </>
+                
             ) : (
                 <>
                     <Link href="/login">
