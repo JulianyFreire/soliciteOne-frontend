@@ -71,12 +71,12 @@ export default function Pedidos() {
         return (
             <View className="flex-1">
                 <View className="flex-row items-center p-5 mt-2 justify-center">
-                    <Text className="text-4xl text-purple-800 w-64 font-medium">Cadastre sua solicitação</Text>
+                    <Text className="text-4xl text-primary w-64 font-light">Cadastre sua solicitação</Text>
                     <Image source={require('../assets/Image/Logo.png')} className="w-24 h-24 max-w-24 max-h-24" resizeMode="contain"/>
                 </View>
                 <View className="px-10 mt-4">
-                    <Text className="text-sm font-semibold text-purple-800 p-2">Categoria</Text>
-                        <View className="border border-purple-800 rounded-xl mb-2 p-2">
+                    <Text className="text-sm font-medium text-primary p-2">Categoria</Text>
+                        <View className="border border-primary rounded-xl mb-2 p-2">
                         <Picker
                             selectedValue={categoryId}
                             onValueChange={(itemValue, itemIndex) => setCategoryId(itemValue)} // Atualiza o id selecionado
@@ -94,25 +94,25 @@ export default function Pedidos() {
                             })}         
                         </Picker>
                     </View>
-                    <Text className="text-sm font-semibold text-purple-800 p-2">Endereço</Text>
+                    <Text className="text-sm font-medium text-primary p-2">Endereço</Text>
                     <TextInput
-                        className="border border-purple-800 rounded-xl p-3 mb-2"
+                        className="border border-primary rounded-xl p-3 mb-2"
                         placeholder="Bairro, Rua e Numero"
                         value={address}
                         onChangeText={setEndereco}
                     />
 
-                    <Text className="text-sm font-semibold text-purple-800 p-2">Disponibilidade</Text>
+                    <Text className="text-sm font-medium text-primary p-2">Disponibilidade</Text>
                     <TextInput
-                        className="border border-purple-800 rounded-xl p-3 mb-2"
+                        className="border border-primary rounded-xl p-3 mb-2"
                         placeholder="Data e horário disponíevel"
                         value={disponibility}
                         onChangeText={setDisponibilidade}   
                     />
 
-                    <Text className="text-sm font-semibold text-purple-800 p-2">Descrição</Text>
+                    <Text className="text-sm font-medium text-primary p-2">Descrição</Text>
                     <TextInput
-                        className="border border-purple-800 rounded-xl p-3 text-wrap mb-2 h-28"
+                        className="border border-primary rounded-xl p-3 text-wrap mb-2 h-28"
                         placeholder="Descreva a situação do seu problema para uma solicitação mais efetica" 
                         multiline={true}
                         value={description}
@@ -120,10 +120,10 @@ export default function Pedidos() {
                     />
 
                     <TouchableOpacity
-                        className=" flex items-center justify-center w-40 h-14 mx-auto my-10 bg-purple-300 rounded-xl p-3"
+                        className=" flex items-center justify-center w-40 h-14 mx-auto my-10 bg-secondary rounded-xl p-3"
                         onPress={criarSolicitacao}
                         >
-                        <Text className="text-2xl text-purple-800">Solicitar</Text>
+                        <Text className="text-2xl text-primary font-regular">Solicitar</Text>
                     </TouchableOpacity>
                 </View>
                 <Navbar />
