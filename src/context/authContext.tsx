@@ -2,6 +2,7 @@ import React, { createContext, ReactNode, useContext, useEffect, useState } from
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { router } from "expo-router";
+import Modal from "../components/modal";
 
 
 interface User {
@@ -65,6 +66,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }, []);
     
       const login = async (email: string, password: string) => {
+        const [isModalVisible, setIsModalVisible] = useState(false); 
+        const [modalMessage, setModalMessage] = useState(""); 
+        const [modalTitle, setModalTitle] = useState(""); 
+
         setLoading(true);
         try {
           const response = await axios.post("https://api.soliciteapp.com.br/users/login", {
@@ -79,7 +84,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           router.push("/");
         } catch (error) {
           console.error("Erro no login:", error);
-          alert("Credenciais inválidas.");
+          setModalTitle("Email ou senha estão incorretos");
+          setModalMessage("Verifique suas informações e tente novamente.");
+          setIsModalVisible(true); 
           router.push("/login");
         } finally {
           setLoading(false);
