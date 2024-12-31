@@ -6,20 +6,32 @@ import { Link, router} from "expo-router";
 import { useAuth } from "../context/authContext";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useSearchParams } from "expo-router/build/hooks";
+
 
 export default function Pedidos() {
 
-    interface Category {
-        _id: string; // ou number, dependendo do tipo do ID na API
-        name: string;
-      }
+
+  
+  
+  interface Category {
+    _id: string; // ou number, dependendo do tipo do ID na API
+    name: string;
+  }
+  
+  const searchParams = useSearchParams(); // Para recuperar os parâmetros da URL
+  const categoryId = searchParams.get('categoryId') || ''; // Obtém o parâmetro ou usa um valor padrão
 
     const [categories, setCategories] = useState<Category[]>([]);  // Armazena as categorias
-    const [categoryId, setCategoryId] = useState('');
     const [address, setEndereco] = useState("");
     const [disponibility, setDisponibilidade] = useState("");
     const [description, setDescricao] = useState("");
     const { isLoggedIn, user } = useAuth()
+
+    const handlePickerChange = (itemValue: string) => {
+      // Atualiza a URL com a nova categoria selecionada
+      router.push(`/pedidos?categoryId=${itemValue}`);
+    };
 
     useEffect(() => {
         axios.get('https://api.soliciteapp.com.br/categories') // URL da API para categorias
@@ -79,7 +91,7 @@ export default function Pedidos() {
                         <View className="border border-purple-800 rounded-xl mb-2 p-2">
                         <Picker
                             selectedValue={categoryId}
-                            onValueChange={(itemValue, itemIndex) => setCategoryId(itemValue)} // Atualiza o id selecionado
+                            onValueChange={handlePickerChange} // Atualiza o id selecionado
                         >
                             <Picker.Item label="Selecionar" value="" />
                                 {categories.map((category) => {

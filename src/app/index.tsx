@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../context/authContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { router } from "expo-router";
 
 
 export default function Index() {
@@ -35,6 +36,7 @@ export default function Index() {
     const { isLoggedIn } = useAuth();
     const [solicitation, setSolicitation] = useState<Solicitation | null>(null);
     const [categories, setCategories] = useState<Category[]>([]);
+    const [categoryId, setCategoryId] = useState('')
 
     useEffect(() => {
         const fetchSolicitation = async () => {
@@ -62,6 +64,11 @@ export default function Index() {
           });
       }, []);
 
+      const handleCategoryClick = ({category}: any) => {
+        setCategoryId(category._id); // Atualiza o estado com a categoria selecionada
+        router.push(`/pedidos?categoryId=${category._id}`); // Redireciona para a rota com query string
+      };
+
       
     return (
         <View className="flex-1">
@@ -73,7 +80,11 @@ export default function Index() {
                     <Text className="text-xl font-semibold text-purple-700 mt-8 mb-3">Serviços:</Text>
                     <View className="flex flex-wrap flex-row gap-4">
                         {categories.map((categories) => (
-                            <Destaques key={categories._id} categoria={categories.name} />
+                            <Destaques
+                              key={categories._id}
+                              categoria={categories.name}
+                              onPress={() => handleCategoryClick({category: categories})}
+                              />
                         ))}
                     </View>
                 </View>

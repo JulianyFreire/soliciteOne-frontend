@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Image, Text, View, TouchableOpacity } from "react-native";
 import { useAuth } from "../context/authContext";
 
-export function Destaques({categoria}: any) {
+export function Destaques({categoria, onPress}: any) {
 
 
     const { isLoggedIn } = useAuth()
@@ -20,13 +20,17 @@ export function Destaques({categoria}: any) {
             </View>
 
             {isLoggedIn ? (
-                <TouchableOpacity className="flex items-center justify-center w-36 h-10 mx-auto mt-3 bg-purple-300 rounded-xl p-3">
+                <TouchableOpacity
+                    onPress={onPress} 
+                    className="flex items-center justify-center w-36 h-10 mx-auto mt-3 bg-purple-300 rounded-xl p-3">
                     <Link href="/pedidos" className="text-sm text-purple-800">Solicitar</Link>
                 </TouchableOpacity>
             ) : (
-                <TouchableOpacity className="flex items-center justify-center w-36 h-10 mx-auto mt-3 bg-purple-300 rounded-xl p-3">
-                    <Link href="/login" className="text-sm text-purple-800">Solicitar</Link>
-                </TouchableOpacity>
+                
+                    <TouchableOpacity className="flex items-center justify-center w-36 h-10 mx-auto mt-3 bg-purple-300 rounded-xl p-3">
+                        <Link href="/login" className="text-sm text-purple-800">Solicitar</Link>
+                    </TouchableOpacity>
+                
             )}
 
             
