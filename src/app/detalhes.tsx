@@ -1,4 +1,4 @@
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
 import { Stats } from "../components/stats";
 import { Link } from "expo-router";
 import { Navbar } from "../components/navbar";
@@ -9,6 +9,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function Detalhes() {
 
   interface Solicitation {
+    _id: string;
     user: string;
     category: {
       _id: string;
@@ -39,6 +40,19 @@ export default function Detalhes() {
     fetchSolicitation();
   }, []);
 
+  const handleCancelRequest = async () => {
+    const token = await AsyncStorage.getItem("token");
+    try {
+      const response = await axios.delete(`https://api.soliciteapp.com.br/solicitations/${solicitation?._id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      Alert.alert('Sucesso', 'Solicitação cancelada com sucesso!');
+    } catch (error) {
+      console.error('Erro ao cancelar solicitação:', error);
+      Alert.alert('Erro', 'Não foi possível cancelar a solicitação.');
+    }
+  };
+
   return (
     <View className="flex-1">
         <View className="flex-row items-center p-5 mt-2 justify-center">
@@ -52,12 +66,14 @@ export default function Detalhes() {
             <Text className="text-purple-800 font-semibold">Descrição: <Text className="font-normal">{solicitation?.description}</Text></Text>
         </View>
         <Stats /> 
-        <View className="hidden justify-end w-80 h-20 border mx-auto border-purple-800 rounded-b-lg">
-          <View className="flex-row justify-end items-center p-2 h-8 bg-purple-800 rounded-b-lg">
-            <Link href="/profissionalPedido" className="text-purple-300">Detalhar</Link>
+        {/**<View className="justify-end w-80 h-20 border mx-auto border-purple-800 rounded-b-lg">*/}
+          <View className="flex-row justify-end items-center p-2 w-80 h-8 mx-auto bg-purple-800 rounded-b-lg">
+            <Link href="/orcamento" className="text-purple-300">Detalhar</Link>
           </View>
-        </View>
-          <TouchableOpacity className= "flex items-center justify-center w-40 h-14 ml-5 mt-48  bg-purple-800 rounded-xl p-2">
+        {/**</View>*/}
+          <TouchableOpacity
+            onPress={handleCancelRequest}
+            className= "flex items-center justify-center w-40 h-14 ml-5 mt-48  bg-purple-800 rounded-xl p-2">
             <Link href="/" className="text-purple-300 font-medium text-center">Cancelar Solicitação</Link>
           </TouchableOpacity>
     <Navbar/>
