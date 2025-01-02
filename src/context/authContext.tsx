@@ -45,6 +45,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
 
+    const [isModalVisible, setIsModalVisible] = useState(false); 
+    const [modalMessage, setModalMessage] = useState(""); 
+    const [modalTitle, setModalTitle] = useState(""); 
+
     useEffect(() => {
         const restoreSession = async () => {
           try {
@@ -66,10 +70,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }, []);
     
       const login = async (email: string, password: string) => {
-        const [isModalVisible, setIsModalVisible] = useState(false); 
-        const [modalMessage, setModalMessage] = useState(""); 
-        const [modalTitle, setModalTitle] = useState(""); 
-
+        
         setLoading(true);
         try {
           const response = await axios.post("https://api.soliciteapp.com.br/users/login", {
@@ -81,6 +82,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           await AsyncStorage.setItem("token", token);
           setUser(user);
           setIsLoggedIn(true);
+          setModalTitle("Sucesso");
+          setModalMessage("Login realizado com sucesso!");
+          setIsModalVisible(true); // Exibe o modal
           router.push("/");
         } catch (error) {
           console.error("Erro no login:", error);
@@ -103,6 +107,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       return (
         <AuthContext.Provider value={{ isLoggedIn, user, login, logout, loading }}>
           {children}
+          <Modal
+              isVisible={isModalVisible}
+              title={modalTitle}
+              message={modalMessage}
+              onClose={() => setIsModalVisible(false)}
+            />
         </AuthContext.Provider>
       );
     };
