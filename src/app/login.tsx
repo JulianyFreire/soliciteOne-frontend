@@ -27,9 +27,6 @@ export default function Login() {
       setModalTitle("Sucesso");
       setModalMessage("Login realizado com sucesso!");
       setIsModalVisible(true); // Exibe o modal
-      setTimeout(() => {
-        router.push("/"); // Redireciona para a rota principal após o login
-      }, 8000); // Espera os 8 segundos para redirecionar
     } catch (error) {
       // não está chamando por aqui e sim pelo authContext
       setModalTitle("Email ou senha estão incorretos");
