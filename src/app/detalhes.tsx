@@ -19,6 +19,7 @@ export default function Detalhes() {
     disponibility: string;
     description: string;
     status: string;
+    budget?: string
   }
 
   const [solicitation, setSolicitation] = useState<Solicitation | null>(null);
@@ -32,9 +33,12 @@ export default function Detalhes() {
           headers: { Authorization: `Bearer ${token}` },
         });
         setSolicitation(solicitationData);
+        console.log(solicitation?.budget)
+
       } catch (error) {
         console.error('Erro ao buscar categorias:', error);
       }
+      
     };
   
     fetchSolicitation();
@@ -68,7 +72,13 @@ export default function Detalhes() {
         <Stats /> 
         {/**<View className="justify-end w-80 h-20 border mx-auto border-purple-800 rounded-b-lg">*/}
           <View className="flex-row justify-end items-center p-2 w-80 h-8 mx-auto bg-purple-800 rounded-b-lg">
-            <Link href="/orcamento" className="text-purple-300">Detalhar</Link>
+            <Link href={{ 
+                    pathname: "/orcamento", 
+                    params: { budgetId: solicitation?.budget } 
+                    
+                  }}
+                  
+                  className="text-purple-300">Detalhar</Link>
           </View>
         {/**</View>*/}
           <TouchableOpacity

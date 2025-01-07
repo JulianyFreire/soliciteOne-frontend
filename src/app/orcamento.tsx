@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import Modal from "../components/modal";
+import { useSearchParams } from "expo-router/build/hooks";
 
 export default function Orcamento() {
   
@@ -32,13 +33,14 @@ export default function Orcamento() {
         },
     value: number,
     status: string,
-    description: string,
-        
+    description: string, 
       }
       
     const [isModalVisible, setIsModalVisible] = useState(false); 
     const [modalMessage, setModalMessage] = useState(""); 
     const [modalTitle, setModalTitle] = useState("");
+    const searchParams = useSearchParams();
+    const budgetId = searchParams.get("budgetId");
     
 
     const [budget, setBudget] = useState<Budget | null>(null);
@@ -47,7 +49,7 @@ export default function Orcamento() {
         const fetchbudget = async () => {
           try {
             const token = await AsyncStorage.getItem("token");
-            const { data: budgetData } = await axios.get(`https://api.soliciteapp.com.br/budgets/${budget?._id}`, {
+            const { data: budgetData } = await axios.get(`https://api.soliciteapp.com.br/budgets/${budgetId}`, {
               headers: { Authorization: `Bearer ${token}` },
             });
             setBudget(budgetData);
