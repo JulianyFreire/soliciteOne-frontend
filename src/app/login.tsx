@@ -4,14 +4,16 @@ import { useAuth } from "../context/authContext";
 import { useState } from "react";
 import { useRouter } from "expo-router";
 import Modal from "../components/modal";
+import { Ionicons } from '@expo/vector-icons';
 
 export default function Login() {
   const { login, loading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false); 
   const [modalMessage, setModalMessage] = useState(""); 
-  const [modalTitle, setModalTitle] = useState(""); 
+  const [modalTitle, setModalTitle] = useState("");  
   const router = useRouter();
 
   const handleLogin = async () => {
@@ -23,15 +25,10 @@ export default function Login() {
     }
 
     try {
+      
       await login(email, password);
-      setModalTitle("Sucesso");
-      setModalMessage("Login realizado com sucesso!");
-      setIsModalVisible(true); // Exibe o modal
+
     } catch (error) {
-      // não está chamando por aqui e sim pelo authContext
-      setModalTitle("Email ou senha estão incorretos");
-      setModalMessage("Verifique suas informações e tente novamente.");
-      setIsModalVisible(true); 
     }
   };
 
@@ -45,21 +42,37 @@ export default function Login() {
         />
       </View>
       <View className="px-10 mt-4 w-full">
-        <Text className="text-sm font-regular text-white p-2">Email</Text>
-        <TextInput
-          className="border-b border-secondary rounded-xl p-3 mb-2 text-secondary"
-          value={email}
-          onChangeText={setEmail}
-        />
+        <View>
+          <Text className="text-sm font-regular text-white p-2">Email</Text>
+          <TextInput
+            className="border-b border-secondary rounded-xl p-3 mb-2 text-secondary"
+            value={email}
+            onChangeText={setEmail}
+          />
+        </View>
 
-        <Text className="text-sm font-regular text-white p-2">Senha</Text>
-        <TextInput
-          className="border-b border-secondary rounded-xl p-3 mb-2 text-secondary"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry={true}
-        />
-      </View>
+        <View>
+          <Text className="text-sm font-regular text-white p-2">Senha</Text>
+          <View className="relative">
+            <TextInput
+              className="border-b border-secondary rounded-xl p-3 mb-2 text-secondary"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={!isPasswordVisible} // Alterna entre os modos de exibição
+            />
+            <TouchableOpacity
+              onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+              className="absolute right-4 top-6 -translate-y-1/2"
+            >
+              <Ionicons
+                name={isPasswordVisible ? 'eye' : 'eye-off'}
+                size={20}
+                color="white" // Escolha a cor que combina com seu design
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+        </View>
       {loading ? (
         <ActivityIndicator size="large" color="#FFF" />
       ) : (

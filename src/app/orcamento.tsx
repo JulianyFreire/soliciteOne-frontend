@@ -1,6 +1,6 @@
 import { Alert, Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { Navbar } from "../components/navbar";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
@@ -82,6 +82,7 @@ export default function Orcamento() {
           });
           Alert.alert('Sucesso', 'Crçamento recusado com sucesso!');
           ModalCancelarSolicitacao();
+          router.back();
         } catch (error) {
           console.error('Erro ao recusar orçamento:', error);
           Alert.alert('Erro', 'Não foi possível recusar o orçamento.');
@@ -96,6 +97,7 @@ export default function Orcamento() {
           });
           Alert.alert('Sucesso', 'Orçamento aceito com sucesso!');
           ModalAceitarOrcamento();
+          router.back();
         } catch (error) {
           console.error('Erro ao aceitar orçamento:', error);
           Alert.alert('Erro', 'Não foi possível aceitar o orçamento.');
