@@ -71,15 +71,19 @@ export default function Detalhes() {
         </View>
         <Stats /> 
         {/**<View className="justify-end w-80 h-20 border mx-auto border-purple-800 rounded-b-lg">*/}
-          <View className="flex-row justify-end items-center p-2 w-80 h-8 mx-auto bg-purple-800 rounded-b-lg">
-            <Link href={{ 
-                    pathname: "/orcamento", 
-                    params: { budgetId: solicitation?.budget } 
-                    
-                  }}
-                  
-                  className="text-purple-300">Detalhar</Link>
-          </View>
+          {solicitation?.budget && (
+            <View className="flex-row justify-end items-center p-2 w-80 h-8 mx-auto bg-purple-800 rounded-b-lg">
+              <Link
+                href={{
+                  pathname: "/orcamento",
+                  params: { budgetId: solicitation.budget },
+                }}
+                className="text-purple-300"
+              >
+                Detalhar
+              </Link>
+            </View>
+        )}
         {/**</View>*/}
           <TouchableOpacity
             onPress={handleCancelRequest}
