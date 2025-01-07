@@ -1,6 +1,6 @@
 import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
 import { Stats } from "../components/stats";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { Navbar } from "../components/navbar";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -51,6 +51,7 @@ export default function Detalhes() {
         headers: { Authorization: `Bearer ${token}` },
       });
       Alert.alert('Sucesso', 'Solicitação cancelada com sucesso!');
+      router.back();
     } catch (error) {
       console.error('Erro ao cancelar solicitação:', error);
       Alert.alert('Erro', 'Não foi possível cancelar a solicitação.');
@@ -72,7 +73,7 @@ export default function Detalhes() {
         <Stats /> 
         {/**<View className="justify-end w-80 h-20 border mx-auto border-purple-800 rounded-b-lg">*/}
           {solicitation?.budget && (
-            <View className="flex-row justify-end items-center p-2 w-80 h-8 mx-auto bg-purple-800 rounded-b-lg">
+            <View className="flex-row justify-end items-center p-2 w-80 h-10 mx-auto bg-purple-800 rounded-b-lg">
               <Link
                 href={{
                   pathname: "/orcamento",
@@ -88,7 +89,7 @@ export default function Detalhes() {
           <TouchableOpacity
             onPress={handleCancelRequest}
             className= "flex items-center justify-center w-40 h-14 ml-5 mt-48  bg-purple-800 rounded-xl p-2">
-            <Link href="/" className="text-purple-300 font-medium text-center">Cancelar Solicitação</Link>
+            <Text className="text-purple-300 font-medium text-center">Cancelar Solicitação</Text>
           </TouchableOpacity>
     <Navbar/>
     </View>

@@ -23,7 +23,7 @@ export function Destaques({categoria, onPress}: any) {
                 <TouchableOpacity
                     onPress={onPress} 
                     className="flex items-center justify-center w-36 h-10 mx-auto mt-3 bg-purple-300 rounded-xl p-3">
-                    <Link href="/pedidos" className="text-sm text-purple-800">Solicitar</Link>
+                    <Text className="text-sm text-purple-800">Solicitar</Text>
                 </TouchableOpacity>
             ) : (
                 
