@@ -32,6 +32,10 @@ export default function Login() {
     }
   };
 
+  const handleCadastro = () => {
+    router.push("/cadastro");
+  };
+
   return (
     <View className="flex-1 items-center justify-center min-h-screen bg-primary">
       <View>
@@ -84,10 +88,12 @@ export default function Login() {
             <Text className="text-center font-regular">Entrar</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity className="flex items-center justify-center w-40 h-14 mx-auto my-10 bg-secondary rounded-xl p-3">
-            <Link href="/cadastro" className="text-center font-regular">
+          <TouchableOpacity
+            className="flex items-center justify-center w-40 h-14 mx-auto my-10 bg-secondary rounded-xl p-3"
+            onPress={handleCadastro}>
+            <Text className="text-center font-regular">
               Cadastre-se
-            </Link>
+            </Text>
           </TouchableOpacity>
         </View>
       )}
