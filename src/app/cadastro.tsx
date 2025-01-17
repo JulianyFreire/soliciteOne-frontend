@@ -22,10 +22,15 @@ export default function Cadastro() {
     const [modalTitle, setModalTitle] = useState("");  
 
     const handleCadastro = async () => {
+
+        if (password !== confirmPassword) {
+            setModalTitle("Senhas diferentes");
+            setModalMessage("As senhas digitadas devem ser iguais.");
+            setIsModalVisible(true); 
+            return;
+        }
         
         try {
-            setModalTitle("Bem Vindo ao Solicite");
-            setIsModalVisible(true);
             const response = await axios.post('https://api.soliciteapp.com.br/users', {
                 name,
                 email,
@@ -33,6 +38,9 @@ export default function Cadastro() {
                 phone,
                 document,
             });
+
+            setModalTitle("Bem Vindo ao Solicite");
+            setIsModalVisible(true);
             
             console.log('Cadastro com sucesso');
             // Exibir mensagem de sucesso
@@ -46,6 +54,23 @@ export default function Cadastro() {
             console.log('Erro no cadastro');
         }
     };
+
+    const formatCpf = (value: string): string => {
+        return value
+          .replace(/\D/g, '') // Remove caracteres não numéricos
+          .replace(/(\d{3})(\d)/, '$1.$2') // Adiciona o primeiro ponto
+          .replace(/(\d{3})(\d)/, '$1.$2') // Adiciona o segundo ponto
+          .replace(/(\d{3})(\d{1,2})$/, '$1-$2') // Adiciona o traço
+          .substring(0, 14); // Limita o tamanho máximo
+      };
+
+      const formatPhoneNumber = (value: string): string => {
+        return value
+          .replace(/\D/g, '') // Remove caracteres não numéricos
+          .replace(/(\d{2})(\d)/, '($1) $2') // Adiciona parênteses ao DDD
+          .replace(/(\d{5})(\d)/, '$1-$2') // Adiciona o traço após os 5 dígitos
+          .substring(0, 15); // Limita o tamanho máximo
+      };
 
     return (
         <ScrollView>
@@ -68,7 +93,7 @@ export default function Cadastro() {
                         className="border border-primary rounded-xl p-3 mb-2"
                         placeholder="000.000.000-00"
                         value={document}
-                        onChangeText={setCpf}/>
+                        onChangeText={(text) => setCpf(formatCpf(text))}/>
 
                     <Text className="text-sm font-semibold text-primary p-2">Cidade *</Text>
                     <View className="border border-primary rounded-2xl mb-2">
@@ -93,7 +118,7 @@ export default function Cadastro() {
                         className="border border-primary rounded-xl p-3 mb-2"
                         placeholder="84 99999-9999"
                         value={phone}
-                        onChangeText={setTelefone}/>
+                        onChangeText={(text) => setTelefone(formatPhoneNumber(text))}/>
 
                     <Text className="text-sm font-semibold text-primary p-2">Senha *</Text>
                     <View>
