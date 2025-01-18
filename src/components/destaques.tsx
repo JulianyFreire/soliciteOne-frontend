@@ -1,10 +1,13 @@
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { useState } from "react";
 import { Image, Text, View, TouchableOpacity } from "react-native";
 import { useAuth } from "../context/authContext";
 
 export function Destaques({categoria, onPress}: any) {
 
+    const handlePress = () => {
+        router.push(`/login`);
+    }
 
     const { isLoggedIn } = useAuth()
 
@@ -27,9 +30,11 @@ export function Destaques({categoria, onPress}: any) {
                 </TouchableOpacity>
             ) : (
                 
-                    <TouchableOpacity className="flex items-center justify-center w-36 h-10 mx-auto mt-3 bg-purple-300 rounded-xl p-3">
-                        <Link href="/login" className="text-sm text-purple-800">Solicitar</Link>
-                    </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={handlePress} 
+                    className="flex items-center justify-center w-36 h-10 mx-auto mt-3 bg-purple-300 rounded-xl p-3">
+                    <Text className="text-sm text-purple-800">Solicitar</Text>
+                </TouchableOpacity>
                 
             )}
 

@@ -1,4 +1,4 @@
-import { Alert, Image, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, Image, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Navbar } from "../components/navbar";
 import {Picker} from '@react-native-picker/picker';
 import { useEffect, useState } from "react";
@@ -11,8 +11,6 @@ import { useSearchParams } from "expo-router/build/hooks";
 
 export default function Pedidos() {
 
-
-  
   
   interface Category {
     _id: string; // ou number, dependendo do tipo do ID na API
@@ -82,13 +80,14 @@ export default function Pedidos() {
     {if (isLoggedIn) {
         return (
             <View className="flex-1">
-                <View className="flex-row items-center p-5 mt-2 justify-center">
+              <ScrollView>
+              <View className="flex-row items-center p-5 mt-2 justify-center">
                     <Text className="text-4xl text-primary w-64 font-light">Cadastre sua solicitação</Text>
                     <Image source={require('../assets/Image/Logo.png')} className="w-24 h-24 max-w-24 max-h-24" resizeMode="contain"/>
                 </View>
                 <View className="px-10 mt-4">
                     <Text className="text-sm font-medium text-primary p-2">Categoria</Text>
-                        <View className="border border-primary rounded-xl mb-2 p-2">
+                        <View className="border border-primary rounded-2xl mb-2 p-2">
                         <Picker
                             selectedValue={categoryId}
                             onValueChange={handlePickerChange} // Atualiza o id selecionado
@@ -138,6 +137,8 @@ export default function Pedidos() {
                         <Text className="text-2xl text-primary font-regular">Solicitar</Text>
                     </TouchableOpacity>
                 </View>
+              </ScrollView>
+                
                 <Navbar />
             </View>
         )} else {
