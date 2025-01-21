@@ -47,7 +47,7 @@ export default function Login() {
       </View>
       <View className="px-10 mt-4 w-full">
         <View>
-          <Text className="text-sm font-sans font-regular text-white p-2">Email</Text>
+          <Text className="text-sm font-regular text-white p-2">Email</Text>
           <TextInput
             className="border-b border-secondary rounded-xl p-3 mb-2 text-secondary"
             value={email}
@@ -56,7 +56,7 @@ export default function Login() {
         </View>
 
         <View>
-          <Text className="text-sm font-sans font-regular text-white p-2">Senha</Text>
+          <Text className="text-sm font-regular text-white p-2">Senha</Text>
           <View className="relative">
             <TextInput
               className="border-b border-secondary rounded-xl p-3 mb-2 text-secondary"
@@ -85,13 +85,13 @@ export default function Login() {
             className="flex items-center justify-center w-40 h-14 mx-auto my-10 bg-secondary rounded-xl p-3"
             onPress={handleLogin}
           >
-            <Text className="text-center font-sans font-regular text-2xl">Entrar</Text>
+            <Text className="text-center font-regular">Entrar</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             className="flex items-center justify-center w-40 h-14 mx-auto my-10 bg-secondary rounded-xl p-3"
             onPress={handleCadastro}>
-            <Text className="text-center font-sans font-regular text-2xl">
+            <Text className="text-center font-regular">
               Cadastre-se
             </Text>
           </TouchableOpacity>
@@ -100,7 +100,7 @@ export default function Login() {
 
       {/* Link de recuperação , 'custom-purple': '#AF49FC'*/}
       <View className="flex justify-start ">
-        <Link className="text-sm text-tertiary hover:text-purple-200 font-sans font-light" href="/recuperarSenha">
+        <Link className="text-sm text-tertiary hover:text-purple-200 font-light" href="/recuperarSenha">
           Esqueceu a senha? Clique aqui
         </Link>
       </View>
