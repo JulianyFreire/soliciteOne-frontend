@@ -3,13 +3,13 @@ import { Navbar } from "../components/navbar";
 import { Slider } from "../components/slider";
 import { Stats } from "../components/stats";
 import { Destaques } from "../components/destaques";
+import { Card } from "../components/card";
 import Swiper from 'react-native-swiper';
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../context/authContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
-
 
 export default function Index() {
 
@@ -73,7 +73,6 @@ export default function Index() {
     return (
         <View className="flex-1">
             <ScrollView>
-
                 <Slider/>
                 {solicitation && isLoggedIn ? (<Stats />) : null}
                 <View className="w-96 mx-auto">
@@ -89,35 +88,9 @@ export default function Index() {
                         ))}
                     </View>
                 </View>
-                <View className="w-96 mx-auto">
-                    <Text className="text-xl font-regular text-primary mt-8 mb-3">Como Funciona?</Text>
-                    <View className="flex-row gap-4 h-72 mb-10">    
-                        <View className="flex-col w-44 h-60 mx-auto p-1 shadow-md bg-neutral-50">
-                            <Image source={require('../assets/Banners/banner4.png')} className="mx-auto"></Image>
-                            <View className="p-1">
-                                <Text className="text-md font-regular text-center text-purple-800 mb-2">
-                                    Solicitação
-                                </Text>
-                                <Text className="text-justify text-xs font-light">
-                                    Escolha o serviço que você precisa, iremos recomendar um dos nossos profissionais e faça sua solicitação
-                                </Text>
-                            </View>
-                        </View>
-                        <View className="flex-col w-44 h-60 mx-auto p-2 shadow-md bg-neutral-50">
-                            <Image source={require('../assets/Banners/banner3.png')} className="w-40 mx-auto"></Image>
-                            <View className="p-2">
-                                <Text className="text-md font-regular text-center text-primary mb-2">
-                                    Dúvidas?
-                                </Text>
-                                <Text className="text-justify text-xs font-light">
-                                    Entre em contato com o nosso atendimento online através do nosso <Text className="text-tertiary">Whatsapp</Text>.
-                                </Text>
-                            </View>
-                        </View>
-                    </View>
-                </View>
+              <Card/>
             </ScrollView>
-            <Navbar />
+          <Navbar />
         </View>
     );
 }
