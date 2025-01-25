@@ -3,9 +3,13 @@ import { router } from 'expo-router';
 import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import Modal from "../components/modal";
+import axios from "axios";
+import { useSearchParams } from "expo-router/build/hooks";
+
 
 export default function RecuperarSenha() {
 
+    const [code, setCode] = useState('');
     const [password, setSenha] = useState('');
     const [confirmPassword, setConfirmSenha] = useState('');
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -14,8 +18,10 @@ export default function RecuperarSenha() {
     const [modalMessage, setModalMessage] = useState(""); 
     const [modalTitle, setModalTitle] = useState("");  
     
+    const searchParams = useSearchParams();
+    const email = searchParams.get("email");
 
-    const updatePassword = () => {
+    const updatePassword = async () => {
 
         if (password !== confirmPassword) {
             setModalTitle("Senhas diferentes");
@@ -23,6 +29,21 @@ export default function RecuperarSenha() {
             setIsModalVisible(true); 
             return;
         }
+
+
+        if (!email) {
+            setModalTitle("Erro");
+            setModalMessage("Parâmetro de email não encontrado.");
+            setIsModalVisible(true);
+            return;
+        }
+
+
+        const response = await axios.post('https://api.soliciteapp.com.br/users/confirm-recovery-password', {
+            email,
+            code,
+            password
+        });
 
         router.push("/login");
         console.log(password);
@@ -39,7 +60,12 @@ export default function RecuperarSenha() {
                 <View className="flex-col justify-center items-center my-48">
                     <View className="w-80">
                         <Text className="text-sm font-semibold text-purple-800 mb-2">Codigo de recuperação</Text>
-                        <TextInput className="border border-purple-800 rounded-xl p-3 mb-4" placeholder="Recuperação"/>
+                        <TextInput
+                            className="border border-purple-800 rounded-xl p-3 mb-4"
+                            placeholder="Recuperação"
+                            value={code}
+                            onChangeText={setCode}
+                            />
 
                         <Text className="text-sm font-semibold text-purple-800 mb-2">Nova Senha</Text>
                         <View>
