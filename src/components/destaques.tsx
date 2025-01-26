@@ -18,22 +18,22 @@ export function Destaques({categoria, onPress}: any) {
                     
                     className="hidden"
                 />
-                <Text className="text-lg font-semibold">{categoria}</Text>
+                <Text className="text-lg font-semibold text-primary">{categoria}</Text>
                
             </View>
 
             {isLoggedIn ? (
                 <TouchableOpacity
                     onPress={onPress} 
-                    className="flex items-center justify-center w-36 h-10 mx-auto mt-3 bg-purple-300 rounded-xl p-3">
-                    <Text className="text-sm text-purple-800">Solicitar</Text>
+                    className="flex items-center justify-center w-36 h-10 mx-auto mt-3 bg-secondary rounded-xl p-3">
+                    <Text className="text-sm text-primary font-light">Solicitar</Text>
                 </TouchableOpacity>
             ) : (
                 
                 <TouchableOpacity
                     onPress={handlePress} 
-                    className="flex items-center justify-center w-36 h-10 mx-auto mt-3 bg-purple-300 rounded-xl p-3">
-                    <Text className="text-sm text-purple-800">Solicitar</Text>
+                    className="flex items-center justify-center w-36 h-10 mx-auto mt-3 bg-secondary rounded-xl p-3">
+                    <Text className="text-sm text-primary font-light">Solicitar</Text>
                 </TouchableOpacity>
                 
             )}

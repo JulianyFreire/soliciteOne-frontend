@@ -55,7 +55,7 @@ export function Stats() {
         <Text>Progresso da solicitação:  {description}</Text>
         <View className="w-full bg-gray-200 my-auto rounded-full h-3">
           <View
-            className="bg-purple-500 h-3 rounded-full"
+            className="bg-secondary h-3 rounded-full"
             style={{ width: `${progress}%` }}
           ></View>
         </View>

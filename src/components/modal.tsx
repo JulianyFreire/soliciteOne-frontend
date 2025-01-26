@@ -36,8 +36,8 @@ const Modal: React.FC<ModalProps> = ({ isVisible, title, message, onClose }) => 
       </TouchableOpacity>
       <View className="flex-1 items-center mt-4">
         <View className="bg-secondary rounded-lg p-4 w-96 h-20 shadow-lg">
-          <Text className="font-bold text-center text-black">{title}</Text>
-          <Text className="text-center text-black">{message}</Text>
+          <Text className="font-medium text-center text-primary">{title}</Text>
+          <Text className="font-light text-center text-primary">{message}</Text>
         </View>
       </View>
     </RNModal>
