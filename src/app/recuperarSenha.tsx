@@ -28,24 +28,24 @@ export default function RecuperarSenha() {
     return (
         <View className="flex-1">
             <View className="flex-row gap-10 items-center p-5 mt-2 justify-center mb-52">
-                <Text className="text-4xl text-purple-800 font-medium w-44">Recuperar Senha</Text>
+                <Text className="text-4xl text-primary font-light w-44">Recuperar Senha</Text>
                 <Image source={require('../assets/Image/Logo.png')} className="w-24 h-24 max-w-24 max-h-24 mt-2" resizeMode="contain"/>
             </View>
             <View className="flex-col gap-16 items-center">
                     <View className="w-80">
-                        <Text className="text-sm font-semibold text-purple-800 mb-2">Digite seu email</Text>
+                        <Text className="text-sm font-medium text-primary mb-2">Digite seu email</Text>
                         <TextInput 
-                            className="border border-purple-800 rounded-xl p-3 mb-4"
-                            placeholder="user@gmail.com"
+                            className="border border-primary rounded-xl p-3 mb-4"
+                            placeholder="seuemail@gmail.com"
                             value={email}
                             onChangeText={setEmail}
                         />
                     </View>
                     <View className="flex-1 justify-center items-center">
                         <TouchableOpacity
-                            className="flex items-center justify-center w-48 h-14 bg-purple-300 rounded-xl"
+                            className="flex items-center justify-center w-48 h-14 bg-secondary rounded-xl"
                             onPress={sendMail}>
-                            <Text className="text-xl text-purple-800 font-semibold">Enviar Email</Text>
+                            <Text className="text-xl text-primary font-regular">Enviar Email</Text>
                         </TouchableOpacity>
                     </View>
             </View>

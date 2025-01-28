@@ -32,7 +32,7 @@ const useScaleAnimation = (initialValue: number = 1, scaleValue: number = 0.95):
 };
 
 interface AnimatedCardProps {
-  imageSource: any; // Ajuste conforme o tipo do recurso importado (pode ser ImageSourcePropType para imagens remotas)
+  imageSource: any; 
   title: string;
   description: string;
   highlightText?: string;

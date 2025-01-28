@@ -54,23 +54,23 @@ export default function RecuperarSenha() {
             
             <View className="flex-1">
                 <View className="flex-row gap-10 items-center p-5 mt-2 justify-center">
-                    <Text className="text-4xl text-purple-800 font-medium w-52">Crie uma nova senha</Text>
+                    <Text className="text-4xl text-primary font-light w-52">Crie uma nova senha</Text>
                     <Image source={require('../assets/Image/Logo.png')} className="w-24 h-24 max-w-24 max-h-24 mt-2" resizeMode="contain"/>
                 </View>
                 <View className="flex-col justify-center items-center my-48">
                     <View className="w-80">
-                        <Text className="text-sm font-semibold text-purple-800 mb-2">Codigo de recuperação</Text>
+                        <Text className="text-sm font-medium text-primary mb-2">Codigo de recuperação</Text>
                         <TextInput
-                            className="border border-purple-800 rounded-xl p-3 mb-4"
+                            className="border border-primary rounded-xl p-3 mb-4"
                             placeholder="Recuperação"
                             value={code}
                             onChangeText={setCode}
                             />
 
-                        <Text className="text-sm font-semibold text-purple-800 mb-2">Nova Senha</Text>
+                        <Text className="text-sm font-medium text-primary mb-2">Nova Senha</Text>
                         <View>
                             <TextInput
-                                className="border border-purple-800 rounded-xl p-3 mb-4"
+                                className="border border-primary rounded-xl p-3 mb-4"
                                 placeholder="Senha"
                                 secureTextEntry={!isPasswordVisible}
                                 value={password}
@@ -88,10 +88,10 @@ export default function RecuperarSenha() {
                             </TouchableOpacity>
                         </View>
 
-                        <Text className="text-sm font-semibold text-purple-800 mb-2">Confirme Nova Senha</Text>
+                        <Text className="text-sm font-medium text-primary mb-2">Confirme Nova Senha</Text>
                         <View>
                             <TextInput
-                                className="border border-purple-800 rounded-xl p-3 mb-4"
+                                className="border border-primary rounded-xl p-3 mb-4"
                                 placeholder="Senha"
                                 secureTextEntry={!isConfirmPasswordVisible}
                                 value={confirmPassword}
@@ -111,9 +111,9 @@ export default function RecuperarSenha() {
 
                         <View className="flex-1 justify-center items-center mt-20">
                             <TouchableOpacity 
-                                className="flex items-center justify-center w-48 h-14 bg-purple-300 rounded-xl"
+                                className="flex items-center justify-center w-48 h-14 bg-secondary rounded-xl"
                                 onPress={updatePassword}>
-                                <Text className="text-xl text-purple-800 font-semibold">Atualizar senha</Text>
+                                <Text className="text-xl text-primary font-semibold">Atualizar senha</Text>
                             </TouchableOpacity>
                         </View>
                     </View>

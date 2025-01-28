@@ -62,25 +62,25 @@ export default function Detalhes() {
     <View className="flex-1">
       <View className="flex-1">
           <View className="flex-row items-center p-5 mt-2 justify-center">
-              <Text className="text-4xl text-purple-800 w-64 font-medium">Detalhes da Solicitação</Text>
+              <Text className="text-4xl text-primary w-64 font-light">Detalhes da Solicitação</Text>
               <Image source={require('../assets/Image/Logo.png')} className="w-24 h-24 max-w-24 max-h-24" resizeMode="contain"/>
           </View>
           <View className="w-full p-10 flex-col gap-4 justify-start">
-              <Text className="text-purple-800 font-semibold">Categoria: <Text className="font-normal">{solicitation?.category.name}</Text></Text>
-              <Text className="text-purple-800 font-semibold">Endereço: <Text className="font-normal">{solicitation?.address}</Text></Text>
-              <Text className="text-purple-800 font-semibold">Disponibilidade: <Text className="font-normal">{solicitation?.disponibility}</Text></Text>
-              <Text className="text-purple-800 font-semibold">Descrição: <Text className="font-normal">{solicitation?.description}</Text></Text>
+              <Text className="text-primary font-semibold">Categoria: <Text className="font-regular">{solicitation?.category.name}</Text></Text>
+              <Text className="text-primary font-semibold">Endereço: <Text className="font-regular">{solicitation?.address}</Text></Text>
+              <Text className="text-primary font-semibold">Disponibilidade: <Text className="font-regular">{solicitation?.disponibility}</Text></Text>
+              <Text className="text-primary font-semibold">Descrição: <Text className="font-regular">{solicitation?.description}</Text></Text>
           </View>
           <Stats /> 
-          {/**<View className="justify-end w-80 h-20 border mx-auto border-purple-800 rounded-b-lg">*/}
+          {/**<View className="justify-end w-80 h-20 border mx-auto border-primary rounded-b-lg">*/}
             {solicitation?.budget && (
-              <View className="flex-row justify-end items-center p-2 w-80 h-10 mx-auto bg-purple-800 rounded-b-lg">
+              <View className="flex-row justify-end items-center p-2 w-80 h-10 mx-auto bg-primary rounded-b-lg">
                 <Link
                   href={{
                     pathname: "/orcamento",
                     params: { budgetId: solicitation.budget },
                   }}
-                  className="text-purple-300"
+                  className="text-secondary"
                 >
                   Detalhar
                 </Link>
@@ -89,8 +89,8 @@ export default function Detalhes() {
           {/**</View>*/}
             <TouchableOpacity
               onPress={handleCancelRequest}
-              className= "flex items-center justify-center w-40 h-14 ml-5 mt-48  bg-purple-800 rounded-xl p-2">
-              <Text className="text-purple-300 font-medium text-center">Cancelar Solicitação</Text>
+              className= "flex items-center justify-center w-40 h-14 ml-5 mt-48  bg-primary rounded-xl p-2">
+              <Text className="text-secondary font-medium text-center">Cancelar Solicitação</Text>
             </TouchableOpacity>
       </View>
       <Navbar/>

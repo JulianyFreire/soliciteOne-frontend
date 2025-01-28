@@ -80,7 +80,7 @@ export default function Orcamento() {
           const response = await axios.post(`https://api.soliciteapp.com.br/budgets/${budget?._id}/refuse`, {
             headers: { Authorization: `Bearer ${token}` },
           });
-          Alert.alert('Sucesso', 'Crçamento recusado com sucesso!');
+          Alert.alert('Sucesso', 'Orçamento recusado com sucesso!');
           ModalCancelarSolicitacao();
           router.back();
         } catch (error) {
@@ -109,42 +109,42 @@ export default function Orcamento() {
     return (
         <View className="flex-1">
             <View className="flex-row items-center gap-7 p-5 mt-2 justify-center">
-                <Text className="text-4xl text-purple-800 font-medium w-64">Detalhe do Orçamento</Text>
+                <Text className="text-4xl text-primary font-light w-64">Detalhe do Orçamento</Text>
                 <Image source={require("../assets/Image/Logo.png")} className="w-24 h-24 max-w-24 max-h-24" resizeMode="contain"/>
             </View>
             <ScrollView contentContainerStyle={{ paddingHorizontal: 20 }}>
                 <View className="bg-gray p-5 pt-8 rounded-xl w-full mx-auto mt-10 bg-gray-100 shadow-lg">
                     <View className="flex-row mb-6">
-                        <Text className="text-purple-800 font-bold">Categoria:</Text>
-                        <Text className="text-purple-600 ml-2">{budget?.solicitation.category.name}</Text>
+                        <Text className="text-primary font-semibold">Categoria:</Text>
+                        <Text className="text-secondary font-regular ml-2">{budget?.solicitation.category.name}</Text>
                     </View>
                     <View className="flex-row mb-6">
-                        <Text className="text-purple-800 font-bold">Nome:</Text>
-                        <Text className="text-purple-600 ml-2">{budget?.worker.name}</Text>
+                        <Text className="text-primary font-semibold">Nome:</Text>
+                        <Text className="text-secondary font-regular ml-2">{budget?.worker.name}</Text>
                     </View>
                     <View className="flex-row mb-6">
-                        <Text className="text-purple-800 font-bold">Disponibilidade:</Text>
-                        <Text className="text-purple-600 ml-2">{budget?.solicitation.disponibility}</Text>
+                        <Text className="text-primary font-semibold">Disponibilidade:</Text>
+                        <Text className="text-secondary font-regular ml-2">{budget?.solicitation.disponibility}</Text>
                     </View>
                     <View className="flex-row mb-6">
-                        <Text className="text-purple-800 font-bold">Descrição:</Text>
-                        <Text className="text-purple-600 ml-2">{budget?.description}</Text>
+                        <Text className="text-primary font-semibold">Descrição:</Text>
+                        <Text className="text-secondary font-regular ml-2">{budget?.description}</Text>
                     </View>
                     <View className="flex-row mb-6">
-                        <Text className="text-purple-800 font-bold">Orçamento:</Text>
-                        <Text className="text-purple-600 ml-2">{budget?.value}</Text>
+                        <Text className="text-primary font-semibold">Orçamento:</Text>
+                        <Text className="text-secondary ml-2">{budget?.value}</Text>
                     </View>
                     <View className= "flex-row gap-10 mx-auto"> 
                         <TouchableOpacity
                             onPress={handleRefuseBudget}
-                            className= "flex items-center justify-center w-36 h-12 mx-auto my-10 bg-purple-300 rounded-xl px-3">
-                            <Text className="text-purple-800 font-medium text-center">Recusar Orçamento</Text>
+                            className= "flex items-center justify-center w-36 h-12 mx-auto my-10 bg-secondary rounded-xl px-3">
+                            <Text className="text-primary font-regular text-center">Recusar Orçamento</Text>
                         </TouchableOpacity>
                     
                         <TouchableOpacity
                             onPress={handleAcceptBudget}
-                            className="flex items-center justify-center w-36 h-12 mx-auto my-10 bg-purple-800 rounded-xl px-1">
-                            <Text className="text-purple-300 font-medium text-center">Aceitar Orçamento</Text>
+                            className="flex items-center justify-center w-36 h-12 mx-auto my-10 bg-primary rounded-xl px-1">
+                            <Text className="text-secondary font-regular text-center">Aceitar Orçamento</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
