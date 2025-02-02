@@ -12,7 +12,7 @@ export function Destaques({categoria, onPress}: any) {
     const { isLoggedIn } = useAuth()
 
     return (
-        <View className="mx-auto rounded-xl p-4 shadow-md bg-neutral-50">
+        <View className="mx-auto rounded-xl p-3 shadow-md bg-neutral-50">
             <View className="flex-row items-center justify-around">
                 <Image 
                     
@@ -25,14 +25,14 @@ export function Destaques({categoria, onPress}: any) {
             {isLoggedIn ? (
                 <TouchableOpacity
                     onPress={onPress} 
-                    className="flex items-center justify-center w-36 h-10 mx-auto mt-3 bg-secondary rounded-xl p-3">
+                    className="flex items-center justify-center w-28 h-10 mx-auto mt-3 bg-secondary rounded-xl p-3">
                     <Text className="text-sm text-primary font-light">Solicitar</Text>
                 </TouchableOpacity>
             ) : (
                 
                 <TouchableOpacity
                     onPress={handlePress} 
-                    className="flex items-center justify-center w-36 h-10 mx-auto mt-3 bg-secondary rounded-xl p-3">
+                    className="flex items-center justify-center w-28 h-10 mx-auto mt-3 bg-secondary rounded-xl p-3">
                     <Text className="text-sm text-primary font-light">Solicitar</Text>
                 </TouchableOpacity>
                 

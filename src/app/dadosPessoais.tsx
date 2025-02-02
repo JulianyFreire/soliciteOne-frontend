@@ -15,7 +15,7 @@ export default function DadosPessoais() {
                 <Image source={require("../assets/Image/Logo.png")} className="w-24 h-24 max-w-24 max-h-24" resizeMode="contain"/>
             </View>
             <ScrollView contentContainerStyle={{ paddingHorizontal: 20 }}>
-                <View className="bg-gray p-8 rounded-xl w-96 mx-auto mt-10 bg-gray-100 shadow-lg">
+                <View className="bg-gray p-8 rounded-xl w-[90%] max-w-xl mx-auto mt-10 bg-gray-100 shadow-lg">
                     <View className="flex-row mb-6">
                         <Text className="text-primary font-semibold">Nome:</Text>
                         <Text className="text-primary font-light ml-2">{user?.name}</Text>

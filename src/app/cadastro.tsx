@@ -1,10 +1,12 @@
-import { Image, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Image, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Link, router } from "expo-router";
 import { useState } from "react";
 import axios from 'axios';
 import Modal from "../components/modal";
 import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
+import { InputBase } from "../components/inputBase";
+import { Button } from "../components/button";
 
 export default function Cadastro() {
 
@@ -19,7 +21,8 @@ export default function Cadastro() {
     const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false); 
     const [modalMessage, setModalMessage] = useState(""); 
-    const [modalTitle, setModalTitle] = useState("");  
+    const [modalTitle, setModalTitle] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const handleCadastro = async () => {
 
@@ -31,6 +34,7 @@ export default function Cadastro() {
         }
         
         try {
+            setLoading(true);
             const response = await axios.post('https://api.soliciteapp.com.br/users', {
                 name,
                 email,
@@ -52,6 +56,8 @@ export default function Cadastro() {
             setModalMessage("Por favor, preencha todos os campos para continuar o cadastro.");
             setIsModalVisible(true); 
             console.log('Erro no cadastro');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -80,96 +86,68 @@ export default function Cadastro() {
                     <Text className="text-4xl text-primary w-64 font-light">Cadastre sua conta</Text>
                     <Image source={require('../assets/Image/Logo.png')} className="w-24 h-24 max-w-24 max-h-24" resizeMode="contain"/>
                 </View>
-                <View className="px-10 mt-4">
-                    <Text className="text-sm font-semibold text-primary p-2">Nome Completo *</Text>
-                    <TextInput 
-                        className="border border-primary rounded-xl p-3 mb-2"
-                        placeholder="João"
+                <View className="flex-col items-center gap-4">
+                    <InputBase
+                        label="Nome Completo*"
+                        placeholder="Digite seu nome completo"
                         value={name}
-                        onChangeText={setNome}/>
+                        onChangeText={setNome}
+                    />
 
-                    <Text className="text-sm font-semibold text-primary p-2">CPF *</Text>
-                    <TextInput 
-                        className="border border-primary rounded-xl p-3 mb-2"
+                    <InputBase
+                        label="CPF*"
                         placeholder="000.000.000-00"
                         value={document}
-                        onChangeText={(text) => setCpf(formatCpf(text))}/>
+                        onChangeText={(text) => setCpf(formatCpf(text))}
+                    />
 
-                    <Text className="text-sm font-semibold text-primary p-2">Cidade *</Text>
-                    <View className="border border-primary rounded-2xl mb-2">
-                        <Picker
-                            selectedValue={cidade}
-                            onValueChange={setCidade}
-                            mode="dropdown">
-                            <Picker.Item label="Selecione" value="" enabled={false}/>
-                            <Picker.Item label="Currais Novos" value="Currais Novos" />
-                        </Picker>
-                    </View>
+                    <InputBase
+                        label="Cidade*"
+                        value={cidade}
+                        onChangeText={setCidade}
+                        options={[
+                            { label: "Currais Novos", value: "Currais Novos" }
+                        ]}
+                    />
 
-                    <Text className="text-sm font-semibold text-primary p-2">Email *</Text>
-                    <TextInput
-                        className="border border-primary rounded-xl p-3 mb-2"
+                    <InputBase
+                        label="Email*"
                         placeholder="user@email.com"
                         value={email}
-                        onChangeText={setEmail}/>
+                        onChangeText={setEmail}
+                    />
 
-                    <Text className="text-sm font-semibold text-primary p-2">Telefone *</Text>
-                    <TextInput
-                        className="border border-primary rounded-xl p-3 mb-2"
-                        placeholder="84 99999-9999"
+                    <InputBase
+                        label="Telefone*"
+                        placeholder="(84) 99999-9999"
                         value={phone}
-                        onChangeText={(text) => setTelefone(formatPhoneNumber(text))}/>
+                        onChangeText={(text) => setTelefone(formatPhoneNumber(text))}
+                    />
 
-                    <Text className="text-sm font-semibold text-primary p-2">Senha *</Text>
-                    <View>
-                        <TextInput
-                            className="border border-primary rounded-xl p-3 mb-2"
-                            placeholder="Senha"
-                            secureTextEntry={!isPasswordVisible}
-                            value={password}
-                            onChangeText={setSenha}
-                        />
-                        <TouchableOpacity
-                            onPress={() => setIsPasswordVisible(!isPasswordVisible)}
-                            className="absolute right-4 top-6 -translate-y-1/2"
-                        >
-                            <Ionicons
-                                name={isPasswordVisible ? 'eye' : 'eye-off'}
-                                size={20}
-                                color="#DBCAFD" // Escolha a cor que combina com seu design
-                            />
-                        </TouchableOpacity>
-                    </View>
-
-                    <Text className="text-sm font-semibold text-primary p-2">Confirme a Senha *</Text>
-                    <View>
-                        <TextInput
-                            className="border border-primary rounded-xl p-3 mb-2"
-                            placeholder="Senha"
-                            secureTextEntry={!isConfirmPasswordVisible}
-                            value={confirmPassword}
-                            onChangeText={setConfirmSenha}
-                        />
-
-                        <TouchableOpacity
-                            onPress={() => setIsConfirmPasswordVisible(!isConfirmPasswordVisible)}
-                            className="absolute right-4 top-6 -translate-y-1/2"
-                        >
-                            <Ionicons
-                                name={isConfirmPasswordVisible ? 'eye' : 'eye-off'}
-                                size={20}
-                                color="#DBCAFD" // Escolha a cor que combina com seu design
-                            />
-                        </TouchableOpacity>
-                    </View>
+                    <InputBase 
+                    label="Senha*" 
+                    placeholder="Digite sua Senha" 
+                    value={password} 
+                    onChangeText={setSenha} 
+                    isPassword={true} 
+                    />
+                    
+                    <InputBase 
+                    label="Cofirme a Senha*" 
+                    placeholder="Confirme a Senha" 
+                    value={confirmPassword} 
+                    onChangeText={setConfirmSenha} 
+                    isPassword={true} 
+                    />
 
                 </View>
-                <TouchableOpacity
-                    className=" flex items-center justify-center w-40 h-14 mx-auto my-10 bg-purple-300 rounded-xl p-3"
-                    onPress={handleCadastro}
-                    >
-                    <Text className="text-2xl text-primary">Cadastrar</Text>
-                </TouchableOpacity>
+
+                {loading ? (
+                    <ActivityIndicator size="large" color="#DBCAFD" className="p-10"/>
+                ) : (
+                    <Button title="Cadastrar" onPress={handleCadastro}></Button>
+                )}
+
             </View>
             <Modal
                 isVisible={isModalVisible}

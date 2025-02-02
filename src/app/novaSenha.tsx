@@ -1,10 +1,12 @@
-import {Image, Text, TextInput, View, TouchableOpacity, ScrollView} from "react-native";
+import {Image, Text, TextInput, View, TouchableOpacity, ScrollView, ActivityIndicator} from "react-native";
 import { router } from 'expo-router';
 import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import Modal from "../components/modal";
 import axios from "axios";
 import { useSearchParams } from "expo-router/build/hooks";
+import { InputBase } from "../components/inputBase";
+import { Button } from "../components/button";
 
 
 export default function RecuperarSenha() {
@@ -20,6 +22,7 @@ export default function RecuperarSenha() {
     
     const searchParams = useSearchParams();
     const email = searchParams.get("email");
+    const [loading, setLoading] = useState(false);
 
     const updatePassword = async () => {
 
@@ -38,15 +41,25 @@ export default function RecuperarSenha() {
             return;
         }
 
+        try {
+            setLoading(true);
+            const response = await axios.post('https://api.soliciteapp.com.br/users/confirm-recovery-password', {
+                email,
+                code,
+                password
+            });
+        
+            router.push("/login");
+            console.log(password);
+        } catch (error) {
+            console.error("Erro ao enviar email:", error);
+            setModalTitle("Erro");
+            setModalMessage("Erro ao trocar senha, certifique-se que seja um codigo valido.");
+            setIsModalVisible(true);
+        } finally {
+            setLoading(false);
+        }
 
-        const response = await axios.post('https://api.soliciteapp.com.br/users/confirm-recovery-password', {
-            email,
-            code,
-            password
-        });
-
-        router.push("/login");
-        console.log(password);
     }
 
     return (
@@ -57,66 +70,38 @@ export default function RecuperarSenha() {
                     <Text className="text-4xl text-primary font-light w-52">Crie uma nova senha</Text>
                     <Image source={require('../assets/Image/Logo.png')} className="w-24 h-24 max-w-24 max-h-24 mt-2" resizeMode="contain"/>
                 </View>
-                <View className="flex-col justify-center items-center my-48">
-                    <View className="w-80">
-                        <Text className="text-sm font-medium text-primary mb-2">Codigo de recuperação</Text>
-                        <TextInput
-                            className="border border-primary rounded-xl p-3 mb-4"
-                            placeholder="Recuperação"
+                <View className="flex-col justify-center items-center gap-3 mt-32">
+                    
+                        <InputBase
+                            label="Codigo*"
+                            placeholder="Codigo"
                             value={code}
                             onChangeText={setCode}
-                            />
+                        />
 
-                        <Text className="text-sm font-medium text-primary mb-2">Nova Senha</Text>
-                        <View>
-                            <TextInput
-                                className="border border-primary rounded-xl p-3 mb-4"
-                                placeholder="Senha"
-                                secureTextEntry={!isPasswordVisible}
-                                value={password}
-                                onChangeText={setSenha}
-                            />
-                            <TouchableOpacity
-                                onPress={() => setIsPasswordVisible(!isPasswordVisible)}
-                                className="absolute right-4 top-6 -translate-y-1/2"
-                            >
-                                <Ionicons
-                                    name={isPasswordVisible ? 'eye' : 'eye-off'}
-                                    size={20}
-                                    color="#DBCAFD" // Escolha a cor que combina com seu design
-                                />
-                            </TouchableOpacity>
-                        </View>
+                        <InputBase
+                            label="Nova Senha*"
+                            placeholder="Nova Senha"
+                            value={password}
+                            onChangeText={setSenha}
+                            isPassword={true}
+                        />
 
-                        <Text className="text-sm font-medium text-primary mb-2">Confirme Nova Senha</Text>
-                        <View>
-                            <TextInput
-                                className="border border-primary rounded-xl p-3 mb-4"
-                                placeholder="Senha"
-                                secureTextEntry={!isConfirmPasswordVisible}
-                                value={confirmPassword}
-                                onChangeText={setConfirmSenha}
-                            />
-                            <TouchableOpacity
-                                onPress={() => setIsConfirmPasswordVisible(!isConfirmPasswordVisible)}
-                                className="absolute right-4 top-6 -translate-y-1/2"
-                            >
-                                <Ionicons
-                                    name={isConfirmPasswordVisible ? 'eye' : 'eye-off'}
-                                    size={20}
-                                    color="#DBCAFD" // Escolha a cor que combina com seu design
-                                />
-                            </TouchableOpacity>
-                        </View>
+                        <InputBase
+                            label="Confirme Nova Senha*"
+                            placeholder="Confirme Nova senha"
+                            value={confirmPassword}
+                            onChangeText={setConfirmSenha}
+                            isPassword={true}
+                        />
 
-                        <View className="flex-1 justify-center items-center mt-20">
-                            <TouchableOpacity 
-                                className="flex items-center justify-center w-48 h-14 bg-secondary rounded-xl"
-                                onPress={updatePassword}>
-                                <Text className="text-xl text-primary font-semibold">Atualizar senha</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
+                        {loading ? (
+                            <ActivityIndicator size="large" color="#DBCAFD" />
+                        ) : (
+                            <Button title="Atualizar senha" onPress={updatePassword}></Button>
+                        )}
+
+                    
                 </View>
             <Modal
             isVisible={isModalVisible}

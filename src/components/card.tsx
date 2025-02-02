@@ -47,7 +47,7 @@ const AnimatedCard: React.FC<AnimatedCardProps> = ({ imageSource, title, descrip
         className="flex-col w-44 h-60 p-2 shadow-md bg-neutral-50 rounded-lg"
         style={{ transform: [{ scale: scaleAnim }] }}
       >
-        <Image source={imageSource} className="w-28 h-28 mx-auto"/>
+        <Image source={imageSource} style={{ width: 100, height: 100 }} className="mx-auto" resizeMode='cover'/>
         <View className="p-2">
           <Text className="text-md font-semibold text-center text-primary mb-2">
             {title}
@@ -67,11 +67,11 @@ const AnimatedCard: React.FC<AnimatedCardProps> = ({ imageSource, title, descrip
 export const Card: React.FC = () => {
   return (
     <View>
-      <View className="w-96 mx-auto">
+      <View className="w-96 mx-auto px-3">
         <Text className="text-xl font-regular text-primary mt-8 mb-3">Como Funciona?</Text>
       </View>
       
-      <View className="w-full flex-row justify-center gap-4">
+      <View className="flex-row justify-center gap-4">
         <AnimatedCard
           imageSource={require('../assets/Banners/banner-card-one.png')}
           title="Solicitação"
