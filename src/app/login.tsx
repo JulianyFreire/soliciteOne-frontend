@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useRouter } from "expo-router";
 import Modal from "../components/modal";
 import { Ionicons } from '@expo/vector-icons';
+import { Button } from "../components/button";
 
 export default function Login() {
   const { login, loading } = useAuth();
@@ -80,21 +81,9 @@ export default function Login() {
       {loading ? (
         <ActivityIndicator size="large" color="#FFF" />
       ) : (
-        <View style={{ flexDirection: "row", gap: 20 }}>
-          <TouchableOpacity
-            className="flex items-center justify-center w-40 h-14 mx-auto my-10 bg-secondary rounded-xl p-3"
-            onPress={handleLogin}
-          >
-            <Text className="text-center font-regular">Entrar</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            className="flex items-center justify-center w-40 h-14 mx-auto my-10 bg-secondary rounded-xl p-3"
-            onPress={handleCadastro}>
-            <Text className="text-center font-regular">
-              Cadastre-se
-            </Text>
-          </TouchableOpacity>
+        <View className="w-full flex-row justify-around">
+          <Button title="Entrar" onPress={handleLogin}></Button>
+          <Button title="Cadastro" onPress={handleCadastro}></Button>
         </View>
       )}
 

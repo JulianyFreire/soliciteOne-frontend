@@ -1,4 +1,4 @@
-import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Alert, Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { Stats } from "../components/stats";
 import { Link, router } from "expo-router";
 import { Navbar } from "../components/navbar";
@@ -23,10 +23,12 @@ export default function Detalhes() {
   }
 
   const [solicitation, setSolicitation] = useState<Solicitation | null>(null);
+  const [loading, setLoading] = useState(false);
 
 
   useEffect(() => {
     const fetchSolicitation = async () => {
+      setLoading(true);
       try {
         const token = await AsyncStorage.getItem("token");
         const { data: solicitationData } = await axios.get("https://api.soliciteapp.com.br/solicitations/current", {
@@ -37,6 +39,8 @@ export default function Detalhes() {
 
       } catch (error) {
         console.error('Erro ao buscar categorias:', error);
+      } finally {
+        setLoading(false);
       }
       
     };
@@ -60,12 +64,12 @@ export default function Detalhes() {
 
   return (
     <View className="flex-1">
-      <View className="flex-1">
+      <ScrollView>
           <View className="flex-row items-center p-5 mt-2 justify-center">
               <Text className="text-4xl text-primary w-64 font-light">Detalhes da Solicitação</Text>
               <Image source={require('../assets/Image/Logo.png')} className="w-24 h-24 max-w-24 max-h-24" resizeMode="contain"/>
           </View>
-          <View className="w-full p-10 flex-col gap-4 justify-start">
+          <View className="w-96 mx-auto px-5 py-10 flex-col gap-4">
               <Text className="text-primary font-semibold">Categoria: <Text className="font-regular">{solicitation?.category.name}</Text></Text>
               <Text className="text-primary font-semibold">Endereço: <Text className="font-regular">{solicitation?.address}</Text></Text>
               <Text className="text-primary font-semibold">Disponibilidade: <Text className="font-regular">{solicitation?.disponibility}</Text></Text>
@@ -74,7 +78,7 @@ export default function Detalhes() {
           <Stats /> 
           {/**<View className="justify-end w-80 h-20 border mx-auto border-primary rounded-b-lg">*/}
             {solicitation?.budget && (
-              <View className="flex-row justify-end items-center p-2 w-80 h-10 mx-auto bg-primary rounded-b-lg">
+              <View className="flex-row justify-end items-center p-2 w-5/6 h-10 max-w-96 mx-auto bg-primary rounded-b-lg">
                 <Link
                   href={{
                     pathname: "/orcamento",
@@ -87,12 +91,22 @@ export default function Detalhes() {
               </View>
           )}
           {/**</View>*/}
-            <TouchableOpacity
-              onPress={handleCancelRequest}
-              className= "flex items-center justify-center w-40 h-14 ml-5 mt-48  bg-primary rounded-xl p-2">
-              <Text className="text-secondary font-medium text-center">Cancelar Solicitação</Text>
-            </TouchableOpacity>
-      </View>
+
+            {loading ? (
+              <ActivityIndicator size="large" color="#DBCAFD" className="p-10"/>
+            ) : (
+              <View className="w-96 mx-auto">
+                <TouchableOpacity
+                  onPress={handleCancelRequest}
+                  className= "flex items-center justify-center w-40 h-14 ml-5 mt-32  bg-primary rounded-xl p-2 m-5">
+                  <Text className="text-secondary font-medium text-center">Cancelar Solicitação</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+
+
+      </ScrollView>
+      
       <Navbar/>
     </View>
     

@@ -1,4 +1,4 @@
-import { Alert, Image, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Alert, Image, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Navbar } from "../components/navbar";
 import {Picker} from '@react-native-picker/picker';
 import { useEffect, useState } from "react";
@@ -7,6 +7,8 @@ import { useAuth } from "../context/authContext";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSearchParams } from "expo-router/build/hooks";
+import { InputBase } from "../components/inputBase";
+import { Button } from "../components/button";
 
 
 export default function Pedidos() {
@@ -24,6 +26,7 @@ export default function Pedidos() {
     const [address, setEndereco] = useState("");
     const [disponibility, setDisponibilidade] = useState("");
     const [description, setDescricao] = useState("");
+    const [loading, setLoading] = useState(false);
     const { isLoggedIn, user } = useAuth()
 
     const handlePickerChange = (itemValue: string) => {
@@ -53,7 +56,7 @@ export default function Pedidos() {
           }
 
         try {
-            
+            setLoading(true);
             const token = await AsyncStorage.getItem("token"); // Recupera o token do AsyncStorage
             console.log("user", user);
             const response = await axios.post(
@@ -74,6 +77,8 @@ export default function Pedidos() {
             console.error(error);
             
             Alert.alert("Erro", "Não foi possível criar a solicitação.");
+          } finally {
+            setLoading(false);
           }
         };    
 
@@ -85,57 +90,47 @@ export default function Pedidos() {
                     <Text className="text-4xl text-primary w-64 font-light">Cadastre sua solicitação</Text>
                     <Image source={require('../assets/Image/Logo.png')} className="w-24 h-24 max-w-24 max-h-24" resizeMode="contain"/>
                 </View>
-                <View className="px-10 mt-4">
-                    <Text className="text-sm font-medium text-primary p-2">Categoria</Text>
-                        <View className="border border-primary rounded-2xl mb-2 p-2">
-                        <Picker
-                            selectedValue={categoryId}
-                            onValueChange={handlePickerChange} // Atualiza o id selecionado
-                        >
-                            <Picker.Item label="Selecionar" value="" />
-                                {categories.map((category) => {
-                                 // Verifique se o id e name estão sendo passados corretamente
-                                return (
-                            <Picker.Item
-                                key={category._id} // Usando o id da categoria como chave
-                                label={category.name} // Exibe o nome da categoria
-                                value={category._id} // Usa o id da categoria como valor
-                            />
-                                );
-                            })}         
-                        </Picker>
-                    </View>
-                    <Text className="text-sm font-medium text-primary p-2">Endereço</Text>
-                    <TextInput
-                        className="border border-primary rounded-xl p-3 mb-2"
-                        placeholder="Bairro, Rua e Numero"
-                        value={address}
-                        onChangeText={setEndereco}
+                <View className="flex-col gap-3 items-center mt-14">
+
+                    <InputBase
+                      label="Categoria*"
+                      value={categoryId}
+                      onChangeText={handlePickerChange}
+                      options={categories.map((category) => ({
+                        key: category._id,
+                        label: category.name,
+                        value: category._id
+                      }))}
                     />
 
-                    <Text className="text-sm font-medium text-primary p-2">Disponibilidade</Text>
-                    <TextInput
-                        className="border border-primary rounded-xl p-3 mb-2"
-                        placeholder="Data e horário disponíevel"
-                        value={disponibility}
-                        onChangeText={setDisponibilidade}   
+                    <InputBase
+                      label="Endereço*"
+                      value={address}
+                      onChangeText={setEndereco}
+                      placeholder="Bairro, Rua e Numero"
                     />
 
-                    <Text className="text-sm font-medium text-primary p-2">Descrição</Text>
-                    <TextInput
-                        className="border border-primary rounded-xl p-3 text-wrap mb-2 h-28"
-                        placeholder="Descreva a situação do seu problema para uma solicitação mais efetica" 
-                        multiline={true}
-                        value={description}
-                        onChangeText={setDescricao}
+                    <InputBase
+                      label="Disponibilidade*"
+                      value={disponibility}
+                      onChangeText={setDisponibilidade}
+                      placeholder="Data e horário disponíevel"
                     />
 
-                    <TouchableOpacity
-                        className=" flex items-center justify-center w-40 h-14 mx-auto my-10 bg-secondary rounded-xl p-3"
-                        onPress={criarSolicitacao}
-                        >
-                        <Text className="text-2xl text-primary font-regular">Solicitar</Text>
-                    </TouchableOpacity>
+                    <InputBase
+                      label="Descrição*"
+                      value={description}
+                      onChangeText={setDescricao}
+                      placeholder="Descreva a situação do seu problema"
+                      isMultiline={true} 
+                    />
+
+                    {loading ? (
+                      <ActivityIndicator size="large" color="#DBCAFD" />
+                    ) : (
+                      <Button title="Solicitar" onPress={criarSolicitacao}></Button>
+                    )}
+
                 </View>
               </ScrollView>
                 

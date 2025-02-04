@@ -75,18 +75,20 @@ export default function Index() {
             <ScrollView>
                 <Slider/>
                 {solicitation && isLoggedIn ? (<Stats />) : null}
-                <View className="w-96 mx-auto">
-                    <Text className="text-xl font-regular text-primary mt-8 mb-3">Serviços:</Text>
-                    <View className="flex flex-wrap flex-row gap-4">
-                        {categories.map((categories) => (
-                            <Destaques
-                              key={categories._id}
-                              categoria={categories.name}
-                              onPress={() => handleCategoryClick({category: categories})}
-                              className="font-light text-primary"
-                              />
-                        ))}
-                    </View>
+                <View className="w-full mx-auto"> 
+                  <View className="w-[90%] md:w-96 mx-auto">
+                  <Text className="text-xl font-regular text-primary mt-8 mb-3 px-3">Serviços:</Text>
+                      <View className="flex flex-wrap flex-row gap-4">
+                          {categories.map((categories) => (
+                              <Destaques
+                                key={categories._id}
+                                categoria={categories.name}
+                                onPress={() => handleCategoryClick({category: categories})}
+                                className="font-light text-primary"
+                                />
+                          ))}
+                      </View>
+                  </View>
                 </View>
               <Card/>
             </ScrollView>

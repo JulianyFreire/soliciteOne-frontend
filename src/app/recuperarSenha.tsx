@@ -1,13 +1,29 @@
-import {Image, Text, TextInput, View, TouchableOpacity} from "react-native";
+import {Image, Text, TextInput, View, TouchableOpacity, ActivityIndicator, ScrollView} from "react-native";
 import { router } from 'expo-router';
 import { useState } from "react";
 import axios from "axios";
+import { Button } from "../components/button";
+import { InputBase } from "../components/inputBase";
+import Modal from "../components/modal";
 
 export default function RecuperarSenha() {
 
     const[email, setEmail] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [isModalVisible, setIsModalVisible] = useState(false); 
+    const [modalMessage, setModalMessage] = useState(""); 
+    const [modalTitle, setModalTitle] = useState("");  
 
     const sendMail = async () => {
+
+        if (!email) {
+            setModalTitle("Erro");
+            setModalMessage("Preencha o campo de email para alterar sua senha");
+            setIsModalVisible(true);
+            return;
+        }
+
+        setLoading(true);
         try {
             const response = await axios.post('https://api.soliciteapp.com.br/users/recovery-password', {
                 email
@@ -22,34 +38,45 @@ export default function RecuperarSenha() {
             console.log(email);
         } catch (error) {
             console.error("Erro ao enviar email:", error);
+            setModalTitle("Erro");
+            setModalMessage("Erro no envio do email, certifique-se que é um email existente");
+            setIsModalVisible(true);
+            
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <View className="flex-1">
-            <View className="flex-row gap-10 items-center p-5 mt-2 justify-center mb-52">
-                <Text className="text-4xl text-primary font-light w-44">Recuperar Senha</Text>
-                <Image source={require('../assets/Image/Logo.png')} className="w-24 h-24 max-w-24 max-h-24 mt-2" resizeMode="contain"/>
+        <ScrollView>
+            <View className="flex-1">
+                <View className="flex-row gap-10 items-center p-5 mt-2 justify-center mb-36">
+                    <Text className="text-4xl text-primary font-light w-52">Recuperar Senha</Text>
+                    <Image source={require('../assets/Image/Logo.png')} className="w-24 h-24 max-w-24 max-h-24 mt-2" resizeMode="contain"/>
+                </View>
+                <View className="flex-col gap-16 items-center">
+                <InputBase
+                    label="Digite seu email"
+                    placeholder="seuemail@gmail.com"
+                    value={email}
+                    onChangeText={setEmail}
+                    />
+                        <View className="flex-1 justify-center items-center">
+                            {loading ? (
+                                <ActivityIndicator size="large" color="#DBCAFD" />
+                            ) : (
+                                <Button title="Enviar Email" onPress={sendMail}></Button>
+                            )}
+                        </View>
+                </View>
             </View>
-            <View className="flex-col gap-16 items-center">
-                    <View className="w-80">
-                        <Text className="text-sm font-medium text-primary mb-2">Digite seu email</Text>
-                        <TextInput 
-                            className="border border-primary rounded-xl p-3 mb-4"
-                            placeholder="seuemail@gmail.com"
-                            value={email}
-                            onChangeText={setEmail}
-                        />
-                    </View>
-                    <View className="flex-1 justify-center items-center">
-                        <TouchableOpacity
-                            className="flex items-center justify-center w-48 h-14 bg-secondary rounded-xl"
-                            onPress={sendMail}>
-                            <Text className="text-xl text-primary font-regular">Enviar Email</Text>
-                        </TouchableOpacity>
-                    </View>
-            </View>
-        </View>
+            <Modal
+                isVisible={isModalVisible}
+                title={modalTitle}
+                message={modalMessage}
+                onClose={() => setIsModalVisible(false)}
+            />
+        </ScrollView>
     );
 }
 

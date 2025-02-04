@@ -1,4 +1,4 @@
-import { Alert, Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Alert, Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { Navbar } from "../components/navbar";
 import { Link, router } from "expo-router";
 import { useEffect, useState } from "react";
@@ -39,6 +39,7 @@ export default function Orcamento() {
     const [isModalVisible, setIsModalVisible] = useState(false); 
     const [modalMessage, setModalMessage] = useState(""); 
     const [modalTitle, setModalTitle] = useState("");
+    const [loading, setLoading] = useState(false);
     const searchParams = useSearchParams();
     const budgetId = searchParams.get("budgetId");
     
@@ -75,6 +76,7 @@ export default function Orcamento() {
       };
 
       const handleRefuseBudget = async () => {
+        setLoading(true);
         const token = await AsyncStorage.getItem("token");
         try {
           const response = await axios.post(`https://api.soliciteapp.com.br/budgets/${budget?._id}/refuse`, {
@@ -86,10 +88,13 @@ export default function Orcamento() {
         } catch (error) {
           console.error('Erro ao recusar orçamento:', error);
           Alert.alert('Erro', 'Não foi possível recusar o orçamento.');
+        } finally {
+          setLoading(false);
         }
       };
 
       const handleAcceptBudget = async () => {
+        setLoading(true);
         const token = await AsyncStorage.getItem("token");
         try {
           const response = await axios.post(`https://api.soliciteapp.com.br/budgets/${budget?._id}/accept`, {
@@ -101,6 +106,8 @@ export default function Orcamento() {
         } catch (error) {
           console.error('Erro ao aceitar orçamento:', error);
           Alert.alert('Erro', 'Não foi possível aceitar o orçamento.');
+        } finally {
+          setLoading(false);
         }
       };
 
@@ -113,7 +120,7 @@ export default function Orcamento() {
                 <Image source={require("../assets/Image/Logo.png")} className="w-24 h-24 max-w-24 max-h-24" resizeMode="contain"/>
             </View>
             <ScrollView contentContainerStyle={{ paddingHorizontal: 20 }}>
-                <View className="bg-gray p-5 pt-8 rounded-xl w-full mx-auto mt-10 bg-gray-100 shadow-lg">
+                <View className="bg-gray p-5 pt-8 rounded-xl w-full max-w-xl mx-auto mt-10 bg-gray-100 shadow-lg">
                     <View className="flex-row mb-6">
                         <Text className="text-primary font-semibold">Categoria:</Text>
                         <Text className="text-secondary font-regular ml-2">{budget?.solicitation.category.name}</Text>
@@ -130,23 +137,31 @@ export default function Orcamento() {
                         <Text className="text-primary font-semibold">Descrição:</Text>
                         <Text className="text-secondary font-regular ml-2">{budget?.description}</Text>
                     </View>
-                    <View className="flex-row mb-6">
+                    <View className="flex-row mb-14">
                         <Text className="text-primary font-semibold">Orçamento:</Text>
                         <Text className="text-secondary ml-2">{budget?.value}</Text>
                     </View>
-                    <View className= "flex-row gap-10 mx-auto"> 
-                        <TouchableOpacity
-                            onPress={handleRefuseBudget}
-                            className= "flex items-center justify-center w-36 h-12 mx-auto my-10 bg-secondary rounded-xl px-3">
-                            <Text className="text-primary font-regular text-center">Recusar Orçamento</Text>
-                        </TouchableOpacity>
-                    
-                        <TouchableOpacity
-                            onPress={handleAcceptBudget}
-                            className="flex items-center justify-center w-36 h-12 mx-auto my-10 bg-primary rounded-xl px-1">
-                            <Text className="text-secondary font-regular text-center">Aceitar Orçamento</Text>
-                        </TouchableOpacity>
-                    </View>
+
+                        {loading ? (
+                          <ActivityIndicator size="large" color="#DBCAFD" />
+                        ) : (
+                          
+                          <View className= "flex-row gap-6 mx-auto"> 
+                            <TouchableOpacity
+                                onPress={handleRefuseBudget}
+                                className= "flex items-center justify-center w-28 md:w-52 h-12 mx-auto mb-4 bg-secondary rounded-xl px-3">
+                                <Text className="text-primary font-regular text-center">Recusar Orçamento</Text>
+                            </TouchableOpacity>
+                        
+                            <TouchableOpacity
+                                onPress={handleAcceptBudget}
+                                className="flex items-center justify-center w-28 md:w-52 h-12 mx-auto mb-4 bg-primary rounded-xl px-1">
+                                <Text className="text-secondary font-regular text-center">Aceitar Orçamento</Text>
+                            </TouchableOpacity>
+                          </View>
+                        )}
+
+
                 </View>
             </ScrollView>
 
