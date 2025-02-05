@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Image, Animated, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, Image, Animated, TouchableWithoutFeedback, Pressable } from 'react-native';
 
 interface UseScaleAnimation {
   scaleAnim: Animated.Value;
@@ -42,7 +42,7 @@ const AnimatedCard: React.FC<AnimatedCardProps> = ({ imageSource, title, descrip
   const { scaleAnim, onPressIn, onPressOut } = useScaleAnimation();
 
   return (
-    <TouchableWithoutFeedback onPressIn={onPressIn} onPressOut={onPressOut}>
+    <Pressable onPressIn={onPressIn} onPressOut={onPressOut} className='w-1/2 p-2 md:p-5 max-w-44'>
       <Animated.View
         className="flex-col w-44 h-60 p-2 shadow-md bg-neutral-50 rounded-lg"
         style={{ transform: [{ scale: scaleAnim }] }}
@@ -60,7 +60,7 @@ const AnimatedCard: React.FC<AnimatedCardProps> = ({ imageSource, title, descrip
           </Text>
         </View>
       </Animated.View>
-    </TouchableWithoutFeedback>
+    </Pressable>
   );
 };
 
