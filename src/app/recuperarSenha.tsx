@@ -52,7 +52,7 @@ export default function RecuperarSenha() {
         <ScrollView>
             <View className="flex-1">
                 <Header title="Recuperar Senha" />
-                <View className="flex-col gap-16 items-center">
+                <View className="flex-col gap-16 items-center top-40">
                 <InputBase
                     label="Digite seu email"
                     placeholder="seuemail@gmail.com"

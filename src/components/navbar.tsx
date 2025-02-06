@@ -1,5 +1,4 @@
 import { Image, View } from "react-native";
-
 import Entypo from '@expo/vector-icons/Entypo';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Link } from "expo-router";
@@ -13,25 +12,40 @@ export function Navbar() {
     return (
         <View className="flex-row bottom-0 left-0 right-0 h-16 justify-around items-center bg-white border-t border-secondary py-2">
             <Link href="/">
-                <Entypo name="home" size={24} color="#520C87"/>
+                <View className="flex-col items-center">
+                    <Entypo name="home" size={24} color="#520C87" />
+                    <View>Início</View>
+                </View>
             </Link>
             {isLoggedIn ? (
                 <>
                     <Link href="/pedidos">
-                        <Image source={require('../assets/Image/Logo.png')} className="w-14 h-14 max-w-14 max-h-14" resizeMode="contain"/>
+                        <View className="flex-col items-center">
+                            <Image source={require('../assets/Image/Logo.png')} className="w-8 h-8 max-w-8 max-h-8" resizeMode="contain"/>
+                            <View>Solicitar</View>
+                        </View>
                     </Link>
                     <Link href="/perfil">
-                        <MaterialCommunityIcons name="account" size={28} color="#520C87" />
+                        <View className="flex-col items-center">
+                            <MaterialCommunityIcons name="account" size={28} color="#520C87" />
+                            <View>Perfil</View>
+                        </View>
                     </Link> 
                 </>
                 
             ) : (
                 <>
                     <Link href="/login">
-                        <Image source={require('../assets/Image/Logo.png')} className="w-14 h-14 max-w-14 max-h-14" resizeMode="contain"/>
+                        <View className="flex-col items-center">
+                            <Image source={require('../assets/Image/Logo.png')} className="w-8 h-8 max-w-8 max-h-8" resizeMode="contain"/>
+                            <View>Solicitar</View>
+                        </View>
                     </Link>
                     <Link href="/login">
-                        <MaterialCommunityIcons name="account" size={28} color="#520C87" />
+                        <View className="flex-col items-center">
+                            <MaterialCommunityIcons name="account" size={28} color="#520C87" />
+                            <View>Perfil</View>
+                        </View>
                     </Link> 
                 </>
             )}             
