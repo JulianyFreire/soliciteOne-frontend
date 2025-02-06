@@ -5,6 +5,7 @@ import axios from "axios";
 import { Button } from "../components/button";
 import { InputBase } from "../components/inputBase";
 import Modal from "../components/modal";
+import { Header } from "../components/header";
 
 export default function RecuperarSenha() {
 
@@ -50,10 +51,7 @@ export default function RecuperarSenha() {
     return (
         <ScrollView>
             <View className="flex-1">
-                <View className="flex-row gap-10 items-center p-5 mt-2 justify-center mb-36">
-                    <Text className="text-4xl text-primary font-light w-52">Recuperar Senha</Text>
-                    <Image source={require('../assets/Image/Logo.png')} className="w-24 h-24 max-w-24 max-h-24 mt-2" resizeMode="contain"/>
-                </View>
+                <Header title="Recuperar Senha" />
                 <View className="flex-col gap-16 items-center">
                 <InputBase
                     label="Digite seu email"

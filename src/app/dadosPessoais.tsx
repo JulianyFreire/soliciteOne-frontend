@@ -1,8 +1,7 @@
 import { Text, View, Image, ScrollView } from "react-native";
 import { Navbar } from "../components/navbar";
 import { useAuth } from "../context/authContext";
-
-
+import { Header } from "../components/header";
 
 export default function DadosPessoais() {
     // Dados do usuário
@@ -10,10 +9,7 @@ export default function DadosPessoais() {
 
     return (
         <View className="flex-1">
-            <View className="flex-row items-center gap-7 p-5 mt-2 justify-center">
-                <Text className="text-4xl text-primary font-light">Dados Pessoais</Text>
-                <Image source={require("../assets/Image/Logo.png")} className="w-24 h-24 max-w-24 max-h-24" resizeMode="contain"/>
-            </View>
+            <Header title="Dados Pessoais" />
             <ScrollView contentContainerStyle={{ paddingHorizontal: 20 }}>
                 <View className="bg-gray p-8 rounded-xl w-[90%] max-w-xl mx-auto mt-10 bg-gray-100 shadow-lg">
                     <View className="flex-row mb-6">

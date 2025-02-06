@@ -7,6 +7,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import { InputBase } from "../components/inputBase";
 import { Button } from "../components/button";
+import {Header}  from "../components/header";
 
 export default function Cadastro() {
 
@@ -82,10 +83,7 @@ export default function Cadastro() {
         <ScrollView>
 
             <View className="flex-1">
-                <View className="flex-row items-center p-5 mt-2 justify-center">
-                    <Text className="text-4xl text-primary w-64 font-light">Cadastre sua conta</Text>
-                    <Image source={require('../assets/Image/Logo.png')} className="w-24 h-24 max-w-24 max-h-24" resizeMode="contain"/>
-                </View>
+                <Header title="Cadastre sua conta" />
                 <View className="flex-col items-center gap-4">
                     <InputBase
                         label="Nome Completo*"
