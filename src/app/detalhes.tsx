@@ -5,6 +5,7 @@ import { Navbar } from "../components/navbar";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Header } from "../components/header";
 
 export default function Detalhes() {
 
@@ -65,10 +66,7 @@ export default function Detalhes() {
   return (
     <View className="flex-1">
       <ScrollView>
-          <View className="flex-row items-center p-5 mt-2 justify-center">
-              <Text className="text-4xl text-primary w-64 font-light">Detalhes da Solicitação</Text>
-              <Image source={require('../assets/Image/Logo.png')} className="w-24 h-24 max-w-24 max-h-24" resizeMode="contain"/>
-          </View>
+          <Header title="Detalhes da Solicitação" />
           <View className="w-96 mx-auto px-5 py-10 flex-col gap-4">
               <Text className="text-primary font-semibold">Categoria: <Text className="font-regular">{solicitation?.category.name}</Text></Text>
               <Text className="text-primary font-semibold">Endereço: <Text className="font-regular">{solicitation?.address}</Text></Text>

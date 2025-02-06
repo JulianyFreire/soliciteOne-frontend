@@ -9,7 +9,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSearchParams } from "expo-router/build/hooks";
 import { InputBase } from "../components/inputBase";
 import { Button } from "../components/button";
-
+import { Header } from "../components/header";
 
 export default function Pedidos() {
 
@@ -86,10 +86,7 @@ export default function Pedidos() {
         return (
             <View className="flex-1">
               <ScrollView>
-              <View className="flex-row items-center p-5 mt-2 justify-center">
-                    <Text className="text-4xl text-primary w-64 font-light">Cadastre sua solicitação</Text>
-                    <Image source={require('../assets/Image/Logo.png')} className="w-24 h-24 max-w-24 max-h-24" resizeMode="contain"/>
-                </View>
+              <Header title="Cadastre sua solicitação" />
                 <View className="flex-col gap-3 items-center mt-14">
 
                     <InputBase

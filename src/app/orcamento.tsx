@@ -6,6 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import Modal from "../components/modal";
 import { useSearchParams } from "expo-router/build/hooks";
+import { Header } from "../components/header";
 
 export default function Orcamento() {
   
@@ -115,10 +116,7 @@ export default function Orcamento() {
 
     return (
         <View className="flex-1">
-            <View className="flex-row items-center gap-7 p-5 mt-2 justify-center">
-                <Text className="text-4xl text-primary font-light w-64">Detalhe do Orçamento</Text>
-                <Image source={require("../assets/Image/Logo.png")} className="w-24 h-24 max-w-24 max-h-24" resizeMode="contain"/>
-            </View>
+            <Header title="Detalhe do Orçamento" />
             <ScrollView contentContainerStyle={{ paddingHorizontal: 20 }}>
                 <View className="bg-gray p-5 pt-8 rounded-xl w-full max-w-xl mx-auto mt-10 bg-gray-100 shadow-lg">
                     <View className="flex-row mb-6">

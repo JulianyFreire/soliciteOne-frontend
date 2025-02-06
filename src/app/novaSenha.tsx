@@ -7,7 +7,7 @@ import axios from "axios";
 import { useSearchParams } from "expo-router/build/hooks";
 import { InputBase } from "../components/inputBase";
 import { Button } from "../components/button";
-
+import { Header } from "../components/header";
 
 export default function RecuperarSenha() {
 
@@ -66,10 +66,7 @@ export default function RecuperarSenha() {
         <ScrollView>
             
             <View className="flex-1">
-                <View className="flex-row gap-10 items-center p-5 mt-2 justify-center">
-                    <Text className="text-4xl text-primary font-light w-52">Crie uma nova senha</Text>
-                    <Image source={require('../assets/Image/Logo.png')} className="w-24 h-24 max-w-24 max-h-24 mt-2" resizeMode="contain"/>
-                </View>
+                <Header title="Crie uma nova senha" />
                 <View className="flex-col justify-center items-center gap-3 mt-32">
                     
                         <InputBase
