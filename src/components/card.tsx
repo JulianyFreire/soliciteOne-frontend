@@ -42,9 +42,9 @@ const AnimatedCard: React.FC<AnimatedCardProps> = ({ imageSource, title, descrip
   const { scaleAnim, onPressIn, onPressOut } = useScaleAnimation();
 
   return (
-    <Pressable onPressIn={onPressIn} onPressOut={onPressOut} className='w-1/2 p-2 md:p-5 max-w-44'>
+    <Pressable onPressIn={onPressIn} onPressOut={onPressOut} className='w-1/2 p-2 md:p-5 max-w-44 bg-neutral-50 rounded-lg shadow-md'>
       <Animated.View
-        className="flex-col w-44 h-60 p-2 shadow-md bg-neutral-50 rounded-lg"
+        className="flex-col w-44 h-60 p-2"
         style={{ transform: [{ scale: scaleAnim }] }}
       >
         <Image source={imageSource} style={{ width: 100, height: 100 }} className="mx-auto" resizeMode='cover'/>

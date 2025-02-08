@@ -1,4 +1,4 @@
-import { Image, View } from "react-native";
+import { Image, Text, View } from "react-native";
 import Entypo from '@expo/vector-icons/Entypo';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Link } from "expo-router";
@@ -14,7 +14,7 @@ export function Navbar() {
             <Link href="/">
                 <View className="flex-col items-center">
                     <Entypo name="home" size={24} color="#520C87" />
-                    <View>Início</View>
+                    <Text>Início</Text>
                 </View>
             </Link>
             {isLoggedIn ? (
@@ -22,13 +22,13 @@ export function Navbar() {
                     <Link href="/pedidos">
                         <View className="flex-col items-center">
                             <Image source={require('../assets/Image/Logo.png')} className="w-8 h-8 max-w-8 max-h-8" resizeMode="contain"/>
-                            <View>Solicitar</View>
+                            <Text>Solicitar</Text>
                         </View>
                     </Link>
                     <Link href="/perfil">
                         <View className="flex-col items-center">
                             <MaterialCommunityIcons name="account" size={28} color="#520C87" />
-                            <View>Perfil</View>
+                            <Text>Perfil</Text>
                         </View>
                     </Link> 
                 </>
@@ -38,13 +38,13 @@ export function Navbar() {
                     <Link href="/login">
                         <View className="flex-col items-center">
                             <Image source={require('../assets/Image/Logo.png')} className="w-8 h-8 max-w-8 max-h-8" resizeMode="contain"/>
-                            <View>Solicitar</View>
+                            <Text>Solicitar</Text>
                         </View>
                     </Link>
                     <Link href="/login">
                         <View className="flex-col items-center">
                             <MaterialCommunityIcons name="account" size={28} color="#520C87" />
-                            <View>Perfil</View>
+                            <Text>Perfil</Text>
                         </View>
                     </Link> 
                 </>
