@@ -96,8 +96,8 @@ export default function Detalhes() {
               <View className="w-96 mx-auto">
                 <TouchableOpacity
                   onPress={handleCancelRequest}
-                  className= "flex items-center justify-center w-40 h-14 ml-5 mt-32  bg-primary rounded-xl p-2 m-5">
-                  <Text className="text-secondary font-medium text-center">Cancelar Solicitação</Text>
+                  className= "flex items-center justify-center w-40 h-14 ml-5 mt-32 border border-primary rounded-xl p-2 m-5">
+                  <Text className="text-primary font-medium text-center">Cancelar Solicitação</Text>
                 </TouchableOpacity>
               </View>
             )}
