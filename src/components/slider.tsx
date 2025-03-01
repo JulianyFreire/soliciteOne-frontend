@@ -13,18 +13,17 @@ export function Slider() {
                 <View className="flex-1 items-center">
                     <Image
                         source={require('../assets/Banners/banner-carousel-one.png')}
-                        style={{ width: 400, height: 200 }}
-                        //style={{ width: "100%", height: "100%" }}
-                        resizeMode="contain"
-                        //resizeMode="cover"
+                        style={{ width: 380, height: 200 }}
+                        className="w-full h-56 rounded-xl"
+                        resizeMode="cover"
                     />
                 </View>
                 <View className="flex-1 items-center">
                     <Image
                         source={require('../assets/Banners/banner-carousel-two.png')}
-                        style={{ width: 400, height: 200 }}
-                        className="w-full h-56 rounded-2xl"
-                        resizeMode="contain"
+                        style={{ width: 380, height: 200 }}
+                        className="w-full h-56 rounded-xl"
+                        resizeMode="cover"
                     />
                 </View>
             </Swiper>
