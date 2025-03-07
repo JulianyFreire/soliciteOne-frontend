@@ -78,7 +78,7 @@ export default function Index() {
                 <View className="w-full mx-auto"> 
                   <View className="w-[90%] md:w-96 mx-auto">
                   <Text className="text-xl font-regular text-primary mt-8 mb-3 px-3">Serviços:</Text>
-                      <View className="flex flex-wrap flex-row gap-4">
+                      <View className="flex flex-wrap flex-row gap-10">
                           {categories.map((categories) => (
                               <Destaques
                                 key={categories._id}

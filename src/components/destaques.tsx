@@ -43,21 +43,21 @@ export function Destaques({ categoria, onPress }: any) {
     };
 
     return (
-        <View className="mx-auto rounded-xl p-3 shadow-md bg-neutral-50">
-            <View className="flex-row items-center justify-around">
-                <Image className="hidden" />
-                <Text className="text-lg font-semibold text-primary">{categoria}</Text>
-            </View>
+            <View className="mx-auto rounded-xl p-6 shadow-md bg-neutral-50">
+                <View className="flex-row items-center justify-around">
+                    <Image className="hidden" />
+                    <Text className="text-xl font-semibold text-primary ">{categoria}</Text>
+                </View>
 
-            <TouchableOpacity
-                onPress={handlePress}
-                className={`flex items-center justify-center w-28 h-10 mx-auto mt-3 rounded-xl p-3 bg-secondary`}
-                 // Desativa o botão caso haja uma solicitação ativa
-            >
-                <Text className="text-sm text-primary font-light">
-                    Solicitar
-                </Text>
-            </TouchableOpacity>
-        </View>
+                <TouchableOpacity
+                    onPress={handlePress}
+                    className={`flex items-center justify-center w-28 h-10 mx-auto mt-3 rounded-xl p-3 bg-secondary`}
+                    // Desativa o botão caso haja uma solicitação ativa
+                >
+                    <Text className="text-sm text-primary font-light">
+                        Solicitar
+                    </Text>
+                </TouchableOpacity>
+            </View>
     );
 }
