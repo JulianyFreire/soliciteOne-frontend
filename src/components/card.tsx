@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, Image, Animated, TouchableWithoutFeedback, Pressable } from 'react-native';
+import React, { ReactNode, useState } from 'react';
+import { View, Text, Image, Animated, TouchableWithoutFeedback, Pressable, TouchableOpacity, Linking } from 'react-native';
 
 interface UseScaleAnimation {
   scaleAnim: Animated.Value;
@@ -35,7 +35,7 @@ interface AnimatedCardProps {
   imageSource: any; 
   title: string;
   description: string;
-  highlightText?: string;
+  highlightText?: ReactNode;
 }
 
 const AnimatedCard: React.FC<AnimatedCardProps> = ({ imageSource, title, description, highlightText }) => {
@@ -71,7 +71,7 @@ export const Card: React.FC = () => {
         <Text className="text-xl font-regular text-primary mt-8 mb-3">Como Funciona?</Text>
       </View>
       
-      <View className="flex-row justify-center gap-4">
+      <View className="flex-row justify-center gap-4 p-4">
         <AnimatedCard
           imageSource={require('../assets/Banners/banner-card-one.png')}
           title="Solicitação"
@@ -81,7 +81,11 @@ export const Card: React.FC = () => {
           imageSource={require('../assets/Banners/banner-card-two.png')}
           title="Dúvidas?"
           description="Entre em contato com o nosso atendimento online através do nosso"
-          highlightText="Whatsapp."
+          highlightText={
+            <TouchableOpacity onPress={() => Linking.openURL("https://wa.me/558496166382")}>
+              <Text className="text-primary font-medium">Whatsapp.</Text>
+            </TouchableOpacity>
+          }
         />
       </View>
     </View>

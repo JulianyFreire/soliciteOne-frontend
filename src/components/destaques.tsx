@@ -35,10 +35,8 @@ export function Destaques({ categoria, onPress }: any) {
     const handlePress = () => {
         if (solicitation) {
             router.push("/detalhes"); // Redireciona se houver solicitação ativa
-        } else if (isLoggedIn) {
-            onPress(); // Permite solicitar normalmente se estiver logado e sem solicitação ativa
         } else {
-            router.push("/login"); // Redireciona para login se não estiver logado
+            onPress(); // Permite solicitar normalmente se estiver logado e sem solicitação ativa
         }
     };
 

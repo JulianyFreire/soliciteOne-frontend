@@ -30,7 +30,7 @@ export default function DadosPessoais() {
                     </View>
                     <View className="flex-row mb-6">
                         <Text className="text-primary font-semibold">Cidade:</Text>
-                        <Text className="text-primary font-light ml-2">cidade</Text>
+                        <Text className="text-primary font-light ml-2">Currais Novos</Text>
                     </View>
                 </View>
             </ScrollView>
