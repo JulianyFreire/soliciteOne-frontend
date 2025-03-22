@@ -43,7 +43,7 @@ export function Destaques({ categoria, onPress }: any) {
     };
 
     return (
-            <View className="mx-auto rounded-xl p-6 shadow-md bg-neutral-50">
+            <View className="mx-auto rounded-xl p-3 shadow-md bg-neutral-50">
                 <View className="flex-row items-center justify-around">
                     <Image className="hidden" />
                     <Text className="text-xl font-semibold text-primary ">{categoria}</Text>

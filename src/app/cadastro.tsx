@@ -143,7 +143,9 @@ export default function Cadastro() {
                 {loading ? (
                     <ActivityIndicator size="large" color="#DBCAFD" className="p-10"/>
                 ) : (
-                    <Button title="Cadastrar" onPress={handleCadastro}></Button>
+                    <View className="flex-1 justify-center items-center">
+                        <Button title="Cadastrar" onPress={handleCadastro}></Button>
+                    </View>
                 )}
 
             </View>

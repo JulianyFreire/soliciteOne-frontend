@@ -51,7 +51,7 @@ export function Stats() {
 
   return (
     <Link href="/detalhes" className="flex mx-auto">
-      <View className="flex-col gap-5 w-[95%] bg-neutral-50 h-32 mx-auto rounded-3xl p-7 shadow-md">
+      <View className="flex-col gap-5 md:w-3/4 w-[90%] bg-neutral-50 h-32 mx-auto rounded-3xl p-7 shadow-md">
         <Text>Progresso da solicitação:  {description}</Text>
         <View className="w-full bg-gray-200 my-auto rounded-full h-3">
           <View
