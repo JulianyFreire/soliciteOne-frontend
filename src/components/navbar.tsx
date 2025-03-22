@@ -55,7 +55,6 @@ export function Navbar() {
                     <Text>Início</Text>
                 </View>
             </Link>
-            {isLoggedIn ? (
                 <>
                 {solicitation ?  (
                     <>
@@ -90,22 +89,7 @@ export function Navbar() {
                 )}
                 </>
                 
-            ) : (
-                <>
-                    <Link href="/login">
-                        <View className="flex-col items-center">
-                            <Image source={require('../assets/Image/Logo.png')} className="w-8 h-8 max-w-8 max-h-8" resizeMode="contain"/>
-                            <Text>Solicitar</Text>
-                        </View>
-                    </Link>
-                    <Link href="/login">
-                        <View className="flex-col items-center">
-                            <MaterialCommunityIcons name="account" size={28} color="#520C87" />
-                            <Text>Perfil</Text>
-                        </View>
-                    </Link> 
-                </>
-            )}             
+       
         </View>
     )
 }

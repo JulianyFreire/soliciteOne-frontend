@@ -10,6 +10,7 @@ import { useSearchParams } from "expo-router/build/hooks";
 import { InputBase } from "../components/inputBase";
 import { Button } from "../components/button";
 import { Header } from "../components/header";
+import Modal from "../components/modal";
 
 export default function Pedidos() {
 
@@ -28,6 +29,9 @@ export default function Pedidos() {
     const [description, setDescricao] = useState("");
     const [loading, setLoading] = useState(false);
     const { isLoggedIn, user } = useAuth()
+    const [isModalVisible, setIsModalVisible] = useState(false); 
+    const [modalMessage, setModalMessage] = useState(""); 
+    const [modalTitle, setModalTitle] = useState(""); 
 
     const handlePickerChange = (itemValue: string) => {
       // Atualiza a URL com a nova categoria selecionada
@@ -44,45 +48,55 @@ export default function Pedidos() {
           });
       }, []);
 
-    const criarSolicitacao = async () => {
+      const criarSolicitacao = async () => {
         if (!categoryId || !address || !disponibility || !description) {
-          Alert.alert("Erro", "Todos os campos são obrigatórios.");
-          return;
-        }
-
-        if (!user) {
-            Alert.alert("Erro", "Usuário não está logado.");
+            setModalTitle("Campos obrigatórios não preenchidos");
+            setModalMessage("Por favor, preencha todos os campos para continuar.");
+            setIsModalVisible(true);
             return;
-          }
-
+        }
+    
+        if (!user) {
+            setModalTitle("Login necessário");
+            setModalMessage("Você precisa estar logado para fazer uma solicitação.");
+            setIsModalVisible(true);
+            return;
+        }
+    
         try {
             setLoading(true);
-            const token = await AsyncStorage.getItem("token"); // Recupera o token do AsyncStorage
-            console.log("user", user);
+            const token = await AsyncStorage.getItem("token");
+            if (!token) {
+                setModalTitle("Erro de autenticação");
+                setModalMessage("Token não encontrado. Faça login novamente.");
+                setIsModalVisible(true);
+                return;
+            }
+    
             const response = await axios.post(
-              "https://api.soliciteapp.com.br/solicitations", // URL da API para criar solicitações
-              {
-                user: user._id, // Identificador do usuário
-                category: categoryId,
-                address,
-                disponibility,
-                description,
-              }
+                "https://api.soliciteapp.com.br/solicitations",
+                {
+                    user: user._id,
+                    category: categoryId,
+                    address,
+                    disponibility,
+                    description,
+                },
+                {
+                    headers: { Authorization: `Bearer ${token}` },
+                }
             );
-      
-            
+    
             router.push("/detalhes");
-            // Redirecionar para outra tela, se necessário
-          } catch (error) {
-            console.error(error);
-            
-            Alert.alert("Erro", "Não foi possível criar a solicitação.");
-          } finally {
+        } catch (error) {
+            setModalTitle("Erro ao criar solicitação");
+            setModalMessage("Não foi possível criar a solicitação. Tente novamente mais tarde.");
+            setIsModalVisible(true);
+        } finally {
             setLoading(false);
-          }
-        };    
+        }
+    };    
 
-    {if (isLoggedIn) {
         return (
             <View className="flex-1">
               <ScrollView>
@@ -132,8 +146,11 @@ export default function Pedidos() {
               </ScrollView>
                 
                 <Navbar />
+                <Modal
+                    isVisible={isModalVisible}
+                    title={modalTitle}
+                    message={modalMessage}
+                    onClose={() => setIsModalVisible(false)}
+                />
             </View>
-        )} else {
-            return null
-        }
-}}
+        )}
