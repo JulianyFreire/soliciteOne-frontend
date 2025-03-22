@@ -33,15 +33,12 @@ export default function Login() {
     }
   };
 
-  const handleCadastro = () => {
-    router.push("/cadastro");
-  };
 
   return (
-    <View className="flex-1 items-center justify-center min-h-screen bg-primary">
+    <View className="flex-1 items-center justify-center min-h-screen">
       <View>
         <Image
-          source={require("../assets/Image/Logo.png")}
+          source={require("../assets/Image/LogoAlt.png")}
           className="w-60 h-60 max-w-60 max-h-60"
           resizeMode="contain"
         />
@@ -50,9 +47,10 @@ export default function Login() {
         <View>
           <Text className="text-sm font-regular text-white p-2">Email</Text>
           <TextInput
-            className="border-b border-secondary rounded-xl p-3 mb-2 text-secondary"
+            className="border border-primary rounded-xl p-3 text-primary"
             value={email}
             onChangeText={setEmail}
+            placeholder="Email"
           />
         </View>
 
@@ -60,9 +58,10 @@ export default function Login() {
           <Text className="text-sm font-regular text-white p-2">Senha</Text>
           <View className="relative">
             <TextInput
-              className="border-b border-secondary rounded-xl p-3 mb-2 text-secondary"
+              className="border border-primary rounded-xl p-3 mb-2 text-primary"
               value={password}
               onChangeText={setPassword}
+              placeholder="Senha"
               secureTextEntry={!isPasswordVisible} // Alterna entre os modos de exibição
             />
             <TouchableOpacity
@@ -72,7 +71,7 @@ export default function Login() {
               <Ionicons
                 name={isPasswordVisible ? 'eye' : 'eye-off'}
                 size={20}
-                color="white" // Escolha a cor que combina com seu design
+                color="#AF49FC" // Escolha a cor que combina com seu design
               />
             </TouchableOpacity>
           </View>
@@ -81,18 +80,23 @@ export default function Login() {
       {loading ? (
         <ActivityIndicator size="large" color="#FFF" />
       ) : (
-        <View className="w-full flex-row justify-around">
-          <Button title="Entrar" onPress={handleLogin}></Button>
-          <Button title="Cadastro" onPress={handleCadastro}></Button>
+        <View className="w-full flex-row items-center justify-between md:justify-around p-10">
+
+          <View className="flex p-2 gap-2">
+            <Link href={"/cadastro"} className="text-sm text-tertiary hover:text-purple-200 font-light">
+             Cadastre-se
+            </Link>
+            <Link className="text-sm text-tertiary hover:text-purple-200 font-light" href="/recuperarSenha">
+              Recuperar Senha
+            </Link>
+          </View>
+
+          <Button title="Entrar" onPress={handleLogin} variant="dark"></Button>
+          
         </View>
       )}
 
       {/* Link de recuperação , 'custom-purple': '#AF49FC'*/}
-      <View className="flex justify-start ">
-        <Link className="text-sm text-tertiary hover:text-purple-200 font-light" href="/recuperarSenha">
-          Esqueceu a senha? Clique aqui
-        </Link>
-      </View>
 
       {/* Modal */}
       <Modal
