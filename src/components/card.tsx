@@ -1,5 +1,6 @@
 import React, { ReactNode, useState } from 'react';
 import { View, Text, Image, Animated, TouchableWithoutFeedback, Pressable, TouchableOpacity, Linking } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 interface UseScaleAnimation {
   scaleAnim: Animated.Value;
@@ -38,11 +39,11 @@ interface AnimatedCardProps {
   highlightText?: ReactNode;
 }
 
-const AnimatedCard: React.FC<AnimatedCardProps> = ({ imageSource, title, description, highlightText }) => {
+const AnimatedCard: React.FC<AnimatedCardProps & { onPress?: () => void }> = ({ imageSource, title, description, highlightText, onPress }) => {
   const { scaleAnim, onPressIn, onPressOut } = useScaleAnimation();
 
   return (
-    <Pressable onPressIn={onPressIn} onPressOut={onPressOut} className='w-1/2 p-2 md:p-5 max-w-44 bg-neutral-50 rounded-lg shadow-md'>
+    <Pressable onPressIn={onPressIn} onPressOut={onPressOut} onPress={onPress} className='w-1/2 p-2 md:p-5 max-w-44 bg-neutral-50 rounded-lg shadow-md'>
       <Animated.View
         className="flex-col w-44 h-60 p-2"
         style={{ transform: [{ scale: scaleAnim }] }}
@@ -65,6 +66,9 @@ const AnimatedCard: React.FC<AnimatedCardProps> = ({ imageSource, title, descrip
 };
 
 export const Card: React.FC = () => {
+
+  const navigation = useNavigation();
+
   return (
     <View>
       <View className="w-96 mx-auto px-3">
@@ -76,15 +80,18 @@ export const Card: React.FC = () => {
           imageSource={require('../assets/Banners/banner-card-one.png')}
           title="Solicitação"
           description="Escolha o serviço que você precisa, iremos recomendar um dos nossos profissionais e faça sua solicitação."
+          onPress={() => navigation.navigate('pedidos' as never)}
         />
         <AnimatedCard
           imageSource={require('../assets/Banners/banner-card-two.png')}
           title="Dúvidas?"
           description="Entre em contato com o nosso atendimento online através do nosso"
+          onPress={() => Linking.openURL('https://wa.me/558496166382')}
           highlightText={
             <TouchableOpacity onPress={() => Linking.openURL("https://wa.me/558496166382")}>
               <Text className="text-primary font-medium">Whatsapp.</Text>
             </TouchableOpacity>
+          
           }
         />
       </View>
