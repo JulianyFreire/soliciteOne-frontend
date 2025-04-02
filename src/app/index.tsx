@@ -10,6 +10,7 @@ import axios from "axios";
 import { useAuth } from "../context/authContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
+import { CardProfe } from "../components/cardProfissional";
 
 export default function Index() {
 
@@ -90,6 +91,7 @@ export default function Index() {
                       </View>
                   </View>
                 </View>
+                <CardProfe/>
               <Card/>
             </ScrollView>
           <Navbar />
