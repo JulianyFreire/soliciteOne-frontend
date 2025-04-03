@@ -120,44 +120,45 @@ export default function Orcamento() {
             <ScrollView contentContainerStyle={{ paddingHorizontal: 20 }}>
                 <View className="bg-gray p-5 pt-8 rounded-xl w-full max-w-xl mx-auto mt-10 bg-gray-100 shadow-lg">
                     <View className="flex-row mb-6">
-                        <Text className="text-primary font-semibold">Categoria:</Text>
-                        <Text className="text-secondary font-regular ml-2">{budget?.solicitation.category.name}</Text>
+                        <Text className="text-primary font-bold">Categoria:</Text>
+                        <Text className="text-primary font-regular ml-2">{budget?.solicitation.category.name}</Text>
                     </View>
                     <View className="flex-row mb-6">
-                        <Text className="text-primary font-semibold">Nome:</Text>
-                        <Text className="text-secondary font-regular ml-2">{budget?.worker.name}</Text>
+                        <Text className="text-primary font-bold">Nome:</Text>
+                        <Text className="text-primary font-regular ml-2">{budget?.worker.name}</Text>
                     </View>
                     <View className="flex-row mb-6">
-                        <Text className="text-primary font-semibold">Disponibilidade:</Text>
-                        <Text className="text-secondary font-regular ml-2">{budget?.solicitation.disponibility}</Text>
+                        <Text className="text-primary font-bold">Disponibilidade:</Text>
+                        <Text className="text-primary font-regular ml-2">{budget?.solicitation.disponibility}</Text>
                     </View>
                     <View className="flex-row mb-6">
-                        <Text className="text-primary font-semibold">Descrição:</Text>
-                        <Text className="text-secondary font-regular ml-2">{budget?.description}</Text>
+                        <Text className="text-primary font-bold">Descrição:</Text>
+                        <Text className="text-primary font-regular ml-2">{budget?.description}</Text>
                     </View>
                     <View className="flex-row mb-14">
-                        <Text className="text-primary font-semibold">Orçamento:</Text>
-                        <Text className="text-secondary ml-2">{budget?.value}</Text>
+                        <Text className="text-primary font-bold">Orçamento:</Text>
+                        <Text className="text-primary ml-2">{budget?.value}</Text>
                     </View>
 
-                        {loading ? (
-                          <ActivityIndicator size="large" color="#DBCAFD" />
-                        ) : (
-                          
-                          <View className= "flex-row gap-6 mx-auto"> 
-                            <TouchableOpacity
-                                onPress={handleRefuseBudget}
-                                className= "flex items-center justify-center w-28 md:w-52 h-12 mx-auto mb-4 bg-secondary rounded-xl px-3">
-                                <Text className="text-primary font-regular text-center">Recusar Orçamento</Text>
-                            </TouchableOpacity>
-                        
-                            <TouchableOpacity
-                                onPress={handleAcceptBudget}
-                                className="flex items-center justify-center w-28 md:w-52 h-12 mx-auto mb-4 bg-primary rounded-xl px-1">
-                                <Text className="text-secondary font-regular text-center">Aceitar Orçamento</Text>
-                            </TouchableOpacity>
-                          </View>
-                        )}
+                    {loading ? (
+                      <ActivityIndicator size="large" color="#DBCAFD" />
+                    ) : (
+                      budget?.status == "accepted_by_customer" && ( // Verifica se o orçamento ainda não foi aceito
+                        <View className="flex-row gap-6 mx-auto"> 
+                          <TouchableOpacity
+                            onPress={handleRefuseBudget}
+                            className="flex items-center justify-center w-28 md:w-52 h-12 mx-auto mb-4 border-primary border-2 rounded-xl px-3">
+                            <Text className="text-primary font-medium text-center">Recusar Orçamento</Text>
+                          </TouchableOpacity>
+
+                          <TouchableOpacity
+                            onPress={handleAcceptBudget}
+                            className="flex items-center justify-center w-28 md:w-52 h-12 mx-auto mb-4 bg-primary rounded-xl px-1">
+                            <Text className="text-secondary font-medium text-center">Aceitar Orçamento</Text>
+                          </TouchableOpacity>
+                        </View>
+                      )
+                    )}
 
 
                 </View>

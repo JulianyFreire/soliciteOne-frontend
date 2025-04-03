@@ -76,7 +76,7 @@ export default function Detalhes() {
           <Stats /> 
           {/**<View className="justify-end w-80 h-20 border mx-auto border-primary rounded-b-lg">*/}
             {solicitation?.budget && (
-              <View className="flex-row justify-end items-center p-2 w-5/6 h-10 max-w-96 mx-auto bg-primary rounded-b-lg">
+              <View className="flex-row justify-end items-center p-2 h-10 w-4/5 max-w-72 mx-auto bg-primary rounded-b-lg">
                 <Link
                   href={{
                     pathname: "/orcamento",
