@@ -112,6 +112,8 @@ export default function Orcamento() {
         }
       };
 
+      console.log("Status do orçamento:", budget?.status);
+
   
 
     return (
@@ -143,7 +145,8 @@ export default function Orcamento() {
                     {loading ? (
                       <ActivityIndicator size="large" color="#DBCAFD" />
                     ) : (
-                      budget?.status == "accepted_by_customer" && ( // Verifica se o orçamento ainda não foi aceito
+                      
+                      budget?.status !== "approved" && ( // Verifica se o orçamento ainda não foi aceito
                         <View className="flex-row gap-6 mx-auto"> 
                           <TouchableOpacity
                             onPress={handleRefuseBudget}
