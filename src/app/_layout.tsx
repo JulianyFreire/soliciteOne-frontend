@@ -7,7 +7,7 @@ import {
   Poppins_500Medium,
   Poppins_600SemiBold
 } from "@expo-google-fonts/poppins"
-import { AuthProvider } from "../context/authContext";
+import { AuthProvider } from "../contexts/AuthContext";
 
 export default function Layout() {
 

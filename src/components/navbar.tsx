@@ -1,95 +1,32 @@
-import { Image, Text, View } from "react-native";
-import Entypo from '@expo/vector-icons/Entypo';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { Link } from "expo-router";
-import React, { useEffect, useState } from "react";
-import { useAuth } from '../context/authContext';
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
+import { View, Text } from "react-native";
+import { Link, usePathname } from "expo-router";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
-export function Navbar() {
+const TABS = [
+  { href: "/" as const, label: "Painel", icon: "grid-outline" as const },
+  { href: "/agenda" as const, label: "Agenda", icon: "calendar-outline" as const },
+  { href: "/financeiro" as const, label: "Financeiro", icon: "wallet-outline" as const },
+  { href: "/perfil" as const, label: "Perfil", icon: "person-outline" as const },
+];
 
-    interface Solicitation {
-        _id: string;
-        user: string;
-        category: {
-          _id: string;
-          name: string;
-        };
-        address: string;
-        disponibility: string;
-        description: string;
-        status: string;
-        budget?: string
-      }
+export function NavbarGestao() {
+  const pathname = usePathname();
 
-    const [solicitation, setSolicitation] = useState<Solicitation | null>(null);
-
-    const { isLoggedIn } = useAuth()
-
-    useEffect(() => {
-        const fetchSolicitation = async () => {
-          try {
-            const token = await AsyncStorage.getItem("token");
-            const { data: solicitationData } = await axios.get("https://api.soliciteapp.com.br/solicitations/current", {
-              headers: { Authorization: `Bearer ${token}` },
-            });
-            setSolicitation(solicitationData);
-            console.log(solicitation?.budget)
-    
-          } catch (error) {
-            console.error('Erro ao buscar categorias:', error);
-          } finally {
-          
-          }
-        };
-      
-        fetchSolicitation();
-      }, []);
-
-    return (
-        <View className="flex-row bottom-0 left-0 right-0 h-16 justify-around items-center bg-white border-t border-secondary py-2">
-            <Link href="/">
-                <View className="flex-col items-center">
-                    <Entypo name="home" size={24} color="#520C87" />
-                    <Text>Início</Text>
-                </View>
-            </Link>
-                <>
-                {solicitation ?  (
-                    <>
-                    <Link href="/detalhes">
-                        <View className="flex-col items-center">
-                            <Image source={require('../assets/Image/Logo.png')} className="w-8 h-8 max-w-8 max-h-8" resizeMode="contain"/>
-                            <Text>Solicitar</Text>
-                        </View>
-                    </Link>
-                    <Link href="/perfil">
-                        <View className="flex-col items-center">
-                            <MaterialCommunityIcons name="account" size={28} color="#520C87" />
-                            <Text>Perfil</Text>
-                        </View>
-                    </Link>
-                    </>
-                ) : (
-                    <>
-                    <Link href="/pedidos">
-                        <View className="flex-col items-center">
-                            <Image source={require('../assets/Image/Logo.png')} className="w-8 h-8 max-w-8 max-h-8" resizeMode="contain"/>
-                            <Text>Solicitar</Text>
-                        </View>
-                    </Link>
-                    <Link href="/perfil">
-                        <View className="flex-col items-center">
-                            <MaterialCommunityIcons name="account" size={28} color="#520C87" />
-                            <Text>Perfil</Text>
-                        </View>
-                    </Link>
-                    </> 
-                )}
-                </>
-                
-       
-        </View>
-    )
+  return (
+    <View className="flex-row bottom-0 left-0 right-0 h-16 justify-around items-center bg-white border-t border-secondary py-2">
+      {TABS.map((tab) => {
+        const isActive = pathname === tab.href;
+        return (
+          <Link key={tab.href} href={tab.href}>
+            <View className="flex-col items-center" style={{ width: 64 }}>
+              <Ionicons name={tab.icon} size={22} color={isActive ? "#1E3A8A" : "#9CA3AF"} />
+              <Text style={{ fontSize: 11, marginTop: 2, color: isActive ? "#1E3A8A" : "#9CA3AF", fontWeight: isActive ? "700" : "400" }}>
+                {tab.label}
+              </Text>
+            </View>
+          </Link>
+        );
+      })}
+    </View>
+  );
 }

@@ -10,6 +10,7 @@ interface User {
   email: string;
   document: string;
   phone: string;
+  profession?: string;
 }
 
 interface AuthContextType {
@@ -17,6 +18,7 @@ interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  updateUser: (data: Partial<User>) => Promise<void>;
   loading: boolean;
 }
 
@@ -28,6 +30,9 @@ const defaultValue: AuthContextType = {
   },
   logout: async () => {
     throw new Error("logout não implementado");
+  },
+  updateUser: async () => {
+    throw new Error("updateUser não implementado");
   },
   loading: false,
 };
@@ -90,6 +95,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const updateUser = async (data: Partial<User>) => {
+    if (!user) return;
+    try {
+      const token = await AsyncStorage.getItem("token");
+      await axios.put(`https://api.soliciteapp.com.br/users/${user._id}`, data, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setUser({ ...user, ...data });
+      setModalTitle("Sucesso");
+      setModalMessage("Dados atualizados com sucesso!");
+      setIsModalVisible(true);
+    } catch (error) {
+      console.error("Erro ao atualizar dados:", error);
+      setModalTitle("Erro");
+      setModalMessage("Não foi possível salvar seus dados. Tente novamente.");
+      setIsModalVisible(true);
+      throw error;
+    }
+  };
+
   const logout = async () => {
     await AsyncStorage.removeItem("token");
     await AsyncStorage.removeItem("email");
@@ -100,7 +125,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, user, login, logout, loading }}>
+    <AuthContext.Provider value={{ isLoggedIn, user, login, logout, updateUser, loading }}>
       {children}
       <Modal
         isVisible={isModalVisible}

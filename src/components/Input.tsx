@@ -21,7 +21,7 @@ export function InputBase({ label, value, onChangeText, placeholder, options, is
       <Text className="text-sm font-medium text-primary mb-2">{label}</Text>
 
       {options ? (
-        <View className="border border-primary rounded-2xl mb-2 p-3">
+        <View className="border border-primary bg-inputBg bg-inputBorder rounded-2xl mb-2 p-3">
           <Picker selectedValue={value} onValueChange={onChangeText} mode="dropdown">
             <Picker.Item label="Selecione" value="" enabled={false} />
             {options.map((option) => (
@@ -32,8 +32,8 @@ export function InputBase({ label, value, onChangeText, placeholder, options, is
       ) : (
         <View>
           <TextInput
-            className={`border border-primary rounded-xl p-3 mb-2 ${isMultiline ? 'h-24' : ''}`}
-            placeholder={placeholder || 'Digite aqui'}
+            className={`border border-background bg-inputBg rounded-md p-3 mb-2 ${isMultiline ? 'h-24' : ''}`}
+            placeholder={placeholder || ''}
             value={value}
             onChangeText={onChangeText}
             secureTextEntry={isPassword && !isPasswordVisible}
@@ -49,7 +49,7 @@ export function InputBase({ label, value, onChangeText, placeholder, options, is
               <Ionicons
                 name={isPasswordVisible ? 'eye' : 'eye-off'}
                 size={20}
-                color="#DBCAFD"
+                color="#90CAF9"
               />
             </TouchableOpacity>
           )}

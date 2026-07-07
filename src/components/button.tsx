@@ -20,7 +20,7 @@ export function Button({ title, onPress, variant = "default" }: ButtonProps) {
 
   return (
     <TouchableOpacity
-      className={`flex justify-center w-36 md:w-52 h-14 my-10 rounded-xl p-3 ${getButtonStyles()}`}
+      className={`flex justify-center w-5/6 md:w-80 rounded-2xl p-3 ${getButtonStyles()}`}
       onPress={onPress}
     >
       <Text className={`text-center font-regular ${variant === "dark" ? "text-secondary" : "text-primary"}`}>

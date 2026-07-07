@@ -5,12 +5,17 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Poppins", "sans-serif"], // Nome da fonte global
+        sans: ["Poppins", "sans-serif"], 
       },
       colors: {
-        primary: "#520C87", // Roxo mais escuro
-        secondary: "#DBCAFD", // Roxo claro
-        tertiary: "#AF49FC", // Roxo do "esqueceu a senha"
+        primary: "#1E3A8A",      
+        secondary: "#90CAF9",    
+
+        background: "#F5F5F7",   
+        surface: "#FFFFFF",      
+   
+        inputText: "#1F2937",   
+        inputPlaceholder: "#9CA3AF", 
       },
       fontWeight: {
         thin: 100,
