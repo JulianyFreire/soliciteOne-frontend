@@ -2,7 +2,7 @@ import React, { createContext, ReactNode, useContext, useEffect, useState } from
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { router } from "expo-router";
-import Modal from "../components/modal";
+import Modal from "../components/Modal";
 
 interface User {
   _id: number;
@@ -46,6 +46,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [modalTitle, setModalTitle] = useState("");
+  const [modalType, setModalType] = useState<"success" | "error" | "info">("info");
 
   useEffect(() => {
     const restoreSession = async () => {
@@ -82,12 +83,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setIsLoggedIn(true);
       setModalTitle("Sucesso");
       setModalMessage("Login realizado com sucesso!");
+      setModalType("success");
       setIsModalVisible(true);
       router.push("/");
     } catch (error) {
       console.error("Erro no login:", error);
       setModalTitle("Email ou senha incorretos");
       setModalMessage("Verifique suas informações e tente novamente.");
+      setModalType("error");
       setIsModalVisible(true);
       router.push("/login");
     } finally {
@@ -105,11 +108,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser({ ...user, ...data });
       setModalTitle("Sucesso");
       setModalMessage("Dados atualizados com sucesso!");
+      setModalType("success");
       setIsModalVisible(true);
     } catch (error) {
       console.error("Erro ao atualizar dados:", error);
       setModalTitle("Erro");
       setModalMessage("Não foi possível salvar seus dados. Tente novamente.");
+      setModalType("error");
       setIsModalVisible(true);
       throw error;
     }
@@ -131,6 +136,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         isVisible={isModalVisible}
         title={modalTitle}
         message={modalMessage}
+        type={modalType}
         onClose={() => setIsModalVisible(false)}
       />
     </AuthContext.Provider>

@@ -11,11 +11,12 @@ module.exports = {
         primary: "#1E3A8A",      
         secondary: "#90CAF9",    
 
-        background: "#F5F5F7",   
+        background: "#F5F6F8",   
         surface: "#FFFFFF",      
    
         inputText: "#1F2937",   
         inputPlaceholder: "#9CA3AF", 
+        borderColor: "#C8CBD0",
       },
       fontWeight: {
         thin: 100,

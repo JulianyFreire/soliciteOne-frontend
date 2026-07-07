@@ -4,9 +4,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 
 const TABS = [
   { href: "/" as const, label: "Painel", icon: "grid-outline" as const },
-  { href: "/agenda" as const, label: "Agenda", icon: "calendar-outline" as const },
-  { href: "/financeiro" as const, label: "Financeiro", icon: "wallet-outline" as const },
-  { href: "/perfil" as const, label: "Perfil", icon: "person-outline" as const },
+  { href: "/profile" as const, label: "Perfil", icon: "person-outline" as const },
 ];
 
 export function NavbarGestao() {
