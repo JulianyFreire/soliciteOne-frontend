@@ -40,12 +40,12 @@ export default function Cadastro() {
         
         try {
             setLoading(true);
-            const response = await axios.post('https://api.soliciteapp.com.br/users', {
+            const response = await axios.post('http://localhost:3000/users', {
                 name,
+                profession,
                 email,
                 password,
                 phone,
-                profession,
                 document,
             });
 
@@ -93,6 +93,7 @@ export default function Cadastro() {
             <View className="flex-1">
                 <Header title="Cadastre-se" />
                 <View className="w-full max-w-md self-center px-6">
+
                     <View>
                         <Text className="text-xl font-medium text-inputText p-2">Profissão</Text>
                         <TextInput
@@ -176,7 +177,7 @@ export default function Cadastro() {
                         <Text className="text-xl font-medium text-inputText p-2">Confirmar Senha</Text>
                         <View className="relative">
                             <TextInput
-                                className={` ${borderClass('confirmPassword')}`}
+                                className={`bg-background border border-borderColor rounded-xl p-3 mb-2 text-inputText${borderClass('confirmPassword')}`}
                                 value={confirmPassword}
                                 onChangeText={setConfirmSenha}
                                 secureTextEntry={!isConfirmPasswordVisible}

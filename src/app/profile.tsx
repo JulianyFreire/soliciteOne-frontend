@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Text, View, TextInput, TouchableOpacity, ScrollView } from "react-native";
+import { router } from "expo-router";
 import { useAuth } from "../contexts/AuthContext";
 import { NavbarGestao } from "../components/Navbar";
 import { Header } from "../components/Header";
@@ -140,6 +141,22 @@ export default function Perfil() {
 
                     <TouchableOpacity
                         className="flex-row items-center self-center border border-InputBorder rounded-full px-5 py-2 mt-8"
+                        onPress={() => router.push('/services')}
+                    >
+                        <Ionicons name="pricetags-outline" size={18} color="#1E3A8A" />
+                        <Text className="text-primary font-medium ml-2">Meus Serviços</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        className="flex-row items-center self-center border border-InputBorder rounded-full px-5 py-2 mt-3"
+                        onPress={() => router.push('/clients')}
+                    >
+                        <Ionicons name="people-outline" size={18} color="#1E3A8A" />
+                        <Text className="text-primary font-medium ml-2">Meus Clientes</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        className="flex-row items-center self-center border border-InputBorder rounded-full px-5 py-2 mt-3"
                         onPress={logout}
                     >
                         <Ionicons name="log-out-outline" size={18} color="#1E3A8A" />
