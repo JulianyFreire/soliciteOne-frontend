@@ -6,6 +6,7 @@ import Modal from "../components/Modal";
 import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import { Header } from "../components/Header";
+import { CARD_SHADOW } from "../styles/shadow";
 
 export default function Cadastro() {
 
@@ -93,9 +94,10 @@ export default function Cadastro() {
             <View className="flex-1">
                 <Header title="Cadastre-se" />
                 <View className="w-full max-w-md self-center px-6">
+                    <View className="bg-surface rounded-2xl p-6" style={CARD_SHADOW}>
 
                     <View>
-                        <Text className="text-xl font-medium text-inputText p-2">Profissão</Text>
+                        <Text className="text-sm font-medium text-inputText p-2">Profissão</Text>
                         <TextInput
                             className={`bg-background border border-borderColor rounded-xl p-3 mb-2 text-inputText ${borderClass('profession')}`}
                             value={profession}
@@ -106,7 +108,7 @@ export default function Cadastro() {
                     </View>
 
                     <View>
-                        <Text className="text-xl font-medium text-inputText p-2">Nome Completo</Text>
+                        <Text className="text-sm font-medium text-inputText p-2">Nome Completo</Text>
                         <TextInput
                             className={`bg-background border border-borderColor rounded-xl p-3 mb-2 text-inputText ${borderClass('name')}`}
                             value={name}
@@ -117,7 +119,7 @@ export default function Cadastro() {
                     </View>
 
                     <View>
-                        <Text className="text-xl font-medium text-inputText p-2">E-mail</Text>
+                        <Text className="text-sm font-medium text-inputText p-2">E-mail</Text>
                         <TextInput
                             className={`bg-background border border-borderColor rounded-xl p-3 mb-2 text-inputText ${borderClass('email')}`}
                             value={email}
@@ -128,7 +130,7 @@ export default function Cadastro() {
                     </View>
 
                     <View>
-                        <Text className="text-xl font-medium text-inputText p-2">CPF</Text>
+                        <Text className="text-sm font-medium text-inputText p-2">CPF</Text>
                         <TextInput
                             className={`bg-background border border-borderColor rounded-xl p-3 mb-2 text-inputText ${borderClass('document')}`}
                             value={document}
@@ -139,7 +141,7 @@ export default function Cadastro() {
                     </View>
 
                     <View>
-                        <Text className="text-xl font-medium text-inputText p-2">Telefone</Text>
+                        <Text className="text-sm font-medium text-inputText p-2">Telefone</Text>
                         <TextInput
                             className={`bg-background border border-borderColor rounded-xl p-3 mb-2 text-inputText ${borderClass('phone')}`}
                             value={phone}
@@ -150,7 +152,7 @@ export default function Cadastro() {
                     </View>
 
                     <View>
-                        <Text className="text-xl font-medium text-inputText p-2">Senha</Text>
+                        <Text className="text-sm font-medium text-inputText p-2">Senha</Text>
                         <View className="relative">
                             <TextInput
                                 className={`bg-background border border-borderColor rounded-xl p-3 mb-2 text-inputText ${borderClass('password')}`}
@@ -163,6 +165,9 @@ export default function Cadastro() {
                             <TouchableOpacity
                                 onPress={() => setIsPasswordVisible(!isPasswordVisible)}
                                 className="absolute right-4 top-6 -translate-y-1/2"
+                                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                                accessibilityLabel={isPasswordVisible ? 'Ocultar senha' : 'Mostrar senha'}
+                                accessibilityRole="button"
                             >
                                 <Ionicons
                                     name={isPasswordVisible ? 'eye' : 'eye-off'}
@@ -174,10 +179,10 @@ export default function Cadastro() {
                     </View>
 
                     <View>
-                        <Text className="text-xl font-medium text-inputText p-2">Confirmar Senha</Text>
+                        <Text className="text-sm font-medium text-inputText p-2">Confirmar Senha</Text>
                         <View className="relative">
                             <TextInput
-                                className={`bg-background border border-borderColor rounded-xl p-3 mb-2 text-inputText${borderClass('confirmPassword')}`}
+                                className={`bg-background border border-borderColor rounded-xl p-3 mb-2 text-inputText ${borderClass('confirmPassword')}`}
                                 value={confirmPassword}
                                 onChangeText={setConfirmSenha}
                                 secureTextEntry={!isConfirmPasswordVisible}
@@ -187,6 +192,9 @@ export default function Cadastro() {
                             <TouchableOpacity
                                 onPress={() => setIsConfirmPasswordVisible(!isConfirmPasswordVisible)}
                                 className="absolute right-4 top-6 -translate-y-1/2"
+                                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                                accessibilityLabel={isConfirmPasswordVisible ? 'Ocultar senha' : 'Mostrar senha'}
+                                accessibilityRole="button"
                             >
                                 <Ionicons
                                     name={isConfirmPasswordVisible ? 'eye' : 'eye-off'}
@@ -195,6 +203,7 @@ export default function Cadastro() {
                                 />
                             </TouchableOpacity>
                         </View>
+                    </View>
                     </View>
                 </View>
 
@@ -206,7 +215,7 @@ export default function Cadastro() {
                             className="w-full rounded-xl bg-secondary p-3 items-center mb-3"
                             onPress={handleCadastro}
                         >
-                            <Text className="text-primary font-semibold text-xl">Criar conta</Text>
+                            <Text className="text-primary font-semibold text-base">Criar conta</Text>
                         </TouchableOpacity>
                     </View>
                 )}

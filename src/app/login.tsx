@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useRouter } from "expo-router";
 import Modal from "../components/Modal";
 import { Ionicons } from '@expo/vector-icons';
+import { CARD_SHADOW } from "../styles/shadow";
 
 export default function Login() {
   const { login, loading } = useAuth();
@@ -43,34 +44,39 @@ export default function Login() {
           <Text className="text-sm text-inputText">Gerencie seu negócio de forma inteligente.</Text>
         </View>
 
-        <View>
-          <Text className="text-base font-medium text-inputText p-2">Email</Text>
-          <TextInput
-            className="bg-background border border-borderColor rounded-xl p-3 text-inputText"
-            value={email}
-            onChangeText={setEmail}
-          />
-        </View>
-
-        <View>
-          <Text className="text-base font-medium text-inputText p-2">Senha</Text>
-          <View className="relative">
+        <View className="bg-surface rounded-2xl p-6" style={CARD_SHADOW}>
+          <View>
+            <Text className="text-sm font-medium text-inputText p-2">Email</Text>
             <TextInput
-              className="bg-background border border-borderColor rounded-xl p-3 mb-2 text-inputText"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry={!isPasswordVisible} // Alterna entre os modos de exibição
+              className="bg-background border border-borderColor rounded-xl p-3 text-inputText"
+              value={email}
+              onChangeText={setEmail}
             />
-            <TouchableOpacity
-              onPress={() => setIsPasswordVisible(!isPasswordVisible)}
-              className="absolute right-4 top-6 -translate-y-1/2"
-            >
-              <Ionicons
-                name={isPasswordVisible ? 'eye' : 'eye-off'}
-                size={20}
-                color="#90CAF9"
+          </View>
+
+          <View>
+            <Text className="text-sm font-medium text-inputText p-2">Senha</Text>
+            <View className="relative">
+              <TextInput
+                className="bg-background border border-borderColor rounded-xl p-3 mb-2 text-inputText"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry={!isPasswordVisible} // Alterna entre os modos de exibição
               />
-            </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+                className="absolute right-4 top-6 -translate-y-1/2"
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                accessibilityLabel={isPasswordVisible ? 'Ocultar senha' : 'Mostrar senha'}
+                accessibilityRole="button"
+              >
+                <Ionicons
+                  name={isPasswordVisible ? 'eye' : 'eye-off'}
+                  size={20}
+                  color="#90CAF9"
+                />
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
 

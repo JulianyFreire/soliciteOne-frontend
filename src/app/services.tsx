@@ -6,6 +6,7 @@ import { NavbarGestao } from "../components/Navbar";
 import { InputBase } from "../components/Input";
 import Modal from "../components/Modal";
 import api from "../services/api";
+import { CARD_SHADOW } from "../styles/shadow";
 
 interface Category {
     _id: string;
@@ -112,7 +113,7 @@ export default function Servicos() {
                             <ActivityIndicator size="large" color="#1E3A8A" />
                         </View>
                     ) : services.length === 0 ? (
-                        <View className="bg-surface rounded-2xl p-8 items-center" style={{ elevation: 1 }}>
+                        <View className="bg-surface rounded-2xl p-8 items-center" style={CARD_SHADOW}>
                             <Ionicons name="pricetags-outline" size={40} color="#D1D5DB" />
                             <Text className="text-gray-400 text-sm mt-2">Você ainda não cadastrou nenhum serviço</Text>
                         </View>
@@ -121,7 +122,7 @@ export default function Servicos() {
                             <View
                                 key={service._id}
                                 className="flex-row justify-between items-center bg-surface rounded-2xl p-4 mb-3"
-                                style={{ elevation: 1, shadowColor: "#000", shadowOpacity: 0.05, shadowRadius: 6 }}
+                                style={CARD_SHADOW}
                             >
                                 <View className="flex-1">
                                     <Text className="text-base font-semibold text-inputText">{service.name}</Text>
@@ -130,7 +131,12 @@ export default function Servicos() {
                                     </Text>
                                 </View>
                                 <Text className="text-sm font-bold text-primary mr-3">{fmtCurrency(service.value)}</Text>
-                                <TouchableOpacity onPress={() => remove(service._id)}>
+                                <TouchableOpacity
+                                    onPress={() => remove(service._id)}
+                                    hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                                    accessibilityLabel={`Excluir serviço ${service.name}`}
+                                    accessibilityRole="button"
+                                >
                                     <Ionicons name="trash-outline" size={20} color="#DC2626" />
                                 </TouchableOpacity>
                             </View>
@@ -179,7 +185,7 @@ export default function Servicos() {
 
                         <View className="flex-row mt-2" style={{ gap: 10 }}>
                             <TouchableOpacity
-                                className="flex-1 rounded-xl border border-InputBorder p-3 items-center"
+                                className="flex-1 rounded-xl border border-borderColor p-3 items-center"
                                 onPress={() => { resetForm(); setShowModal(false); }}
                                 disabled={saving}
                             >

@@ -18,10 +18,10 @@ export function InputBase({ label, value, onChangeText, placeholder, options, is
 
   return (
     <View className="w-5/6 md:w-80">
-      <Text className="text-sm font-medium text-primary mb-2">{label}</Text>
+      <Text className="text-sm font-medium text-inputText mb-2">{label}</Text>
 
       {options ? (
-        <View className="border border-primary bg-inputBg bg-inputBorder rounded-2xl mb-2 p-3">
+        <View className="border border-primary bg-inputBg rounded-xl mb-2 p-3">
           <Picker selectedValue={value} onValueChange={onChangeText} mode="dropdown">
             <Picker.Item label="Selecione" value="" enabled={false} />
             {options.map((option) => (
@@ -32,7 +32,7 @@ export function InputBase({ label, value, onChangeText, placeholder, options, is
       ) : (
         <View>
           <TextInput
-            className={`border border-background bg-inputBg rounded-md p-3 mb-2 ${isMultiline ? 'h-24' : ''}`}
+            className={`border border-borderColor bg-inputBg rounded-xl p-3 mb-2 ${isMultiline ? 'h-24' : ''}`}
             placeholder={placeholder || ''}
             value={value}
             onChangeText={onChangeText}
@@ -45,6 +45,9 @@ export function InputBase({ label, value, onChangeText, placeholder, options, is
             <TouchableOpacity
               onPress={() => setIsPasswordVisible(!isPasswordVisible)}
               className="absolute right-4 top-6 -translate-y-1/2"
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              accessibilityLabel={isPasswordVisible ? 'Ocultar senha' : 'Mostrar senha'}
+              accessibilityRole="button"
             >
               <Ionicons
                 name={isPasswordVisible ? 'eye' : 'eye-off'}

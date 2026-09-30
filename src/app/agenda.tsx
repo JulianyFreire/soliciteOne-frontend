@@ -9,12 +9,16 @@ import {
     KeyboardAvoidingView,
     Platform,
     ActivityIndicator,
+    useWindowDimensions,
 } from "react-native";
+import { useLocalSearchParams } from "expo-router";
 import { NavbarGestao } from "../components/Navbar";
+import { Surface, IconButton, TouchableRipple } from "react-native-paper";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { InputBase } from "../components/Input";
 import Modal from "../components/Modal";
 import api from "../services/api";
+import { CARD_SHADOW } from "../styles/shadow";
 
 interface Appointment {
     id: string;
@@ -27,7 +31,7 @@ interface Appointment {
     duration: string;
     phone: string;
     value: number;
-    status: "confirmado" | "agendado" | "concluído";
+    status: "confirmado" | "agendado" | "concluído" | "cancelado" | "reagendado" | "em atendimento";
 }
 
 interface ServiceOption {
@@ -50,11 +54,27 @@ const MONTH_NAMES = [
 
 const WEEKDAYS = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
 
+const FIXED_YEAR = 2026;
+
 const STATUS_STYLES: Record<Appointment["status"], { label: string; color: string; bg: string }> = {
-    confirmado: { label: "Confirmado", color: "#059669", bg: "#D1FAE5" },
     agendado: { label: "Agendado", color: "#1E3A8A", bg: "#DBEAFE" },
+    confirmado: { label: "Confirmado", color: "#059669", bg: "#D1FAE5" },
+    reagendado: { label: "Reagendado", color: "#D97706", bg: "#FEF3C7" },
+    cancelado: { label: "Cancelado", color: "#DC2626", bg: "#FEE2E2" },
     concluído: { label: "Concluído", color: "#6B7280", bg: "#F3F4F6" },
+    "em atendimento": { label: "Em andamento", color: "#7C3AED", bg: "#EDE9FE" },
 };
+
+const MANUAL_STATUS_OPTIONS: { value: Appointment["status"]; label: string }[] = [
+    { value: "agendado", label: "Agendado" },
+    { value: "confirmado", label: "Confirmado" },
+    { value: "reagendado", label: "Reagendado" },
+    { value: "cancelado", label: "Cancelado" },
+];
+
+// Únicos valores aceitos pelo @IsIn do CreateAppointmentDto/UpdateAppointmentDto no backend.
+// "concluído" e "em atendimento" são calculados automaticamente e nunca devem ser enviados.
+const BACKEND_ACCEPTED_STATUSES = MANUAL_STATUS_OPTIONS.map(o => o.value);
 
 const fmtCurrency = (v: number) =>
     "R$ " + v.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -67,22 +87,58 @@ const formatPhoneNumber = (value: string): string => {
         .substring(0, 15);
 };
 
-// --- Modal de Novo Agendamento ---
-function NewAppointmentModal({
+const formatCentsToBRL = (cents: number): string =>
+    "R$ " + (cents / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+const maskTimeInput = (text: string): string => {
+    let digits = text.replace(/\D/g, '').substring(0, 4);
+    if (digits.length >= 2) {
+        const hh = Math.min(parseInt(digits.substring(0, 2), 10), 23);
+        digits = String(hh).padStart(2, '0') + digits.substring(2);
+    }
+    if (digits.length >= 4) {
+        const mm = Math.min(parseInt(digits.substring(2, 4), 10), 59);
+        digits = digits.substring(0, 2) + String(mm).padStart(2, '0');
+    }
+    if (digits.length <= 2) return digits;
+    return `${digits.substring(0, 2)}:${digits.substring(2)}`;
+};
+
+const timeToMinutes = (time: string): number => {
+    const [h, m] = time.split(':').map(Number);
+    return (h || 0) * 60 + (m || 0);
+};
+
+const maskCurrencyInput = (text: string): string => {
+    const digits = text.replace(/\D/g, '');
+    if (!digits) return '';
+    return formatCentsToBRL(Number(digits));
+};
+
+const parseCurrencyInput = (text: string): number => Number(text.replace(/\D/g, '')) / 100 || 0;
+
+// --- Modal de Novo Agendamento / Edição ---
+function AppointmentFormModal({
     visible,
     onClose,
     onSave,
     dayLabel,
     services,
     clients,
+    mode,
+    initialData,
 }: {
     visible: boolean;
     onClose: () => void;
-    onSave: (appointment: Omit<Appointment, "id" | "day" | "status">) => void;
+    onSave: (appointment: Omit<Appointment, "id" | "day">) => void;
     dayLabel: string;
     services: ServiceOption[];
     clients: ClientOption[];
+    mode: "create" | "edit";
+    initialData?: Appointment;
 }) {
+    const { height: screenHeight } = useWindowDimensions();
+    const modalHeight = screenHeight * 0.7;
     const [client, setClient] = useState('');
     const [clientId, setClientId] = useState('');
     const [useClientCatalog, setUseClientCatalog] = useState(true);
@@ -90,9 +146,9 @@ function NewAppointmentModal({
     const [serviceId, setServiceId] = useState('');
     const [useCatalog, setUseCatalog] = useState(true);
     const [time, setTime] = useState('');
-    const [duration, setDuration] = useState('');
     const [phone, setPhone] = useState('');
     const [value, setValue] = useState('');
+    const [status, setStatus] = useState<Appointment["status"]>('agendado');
 
     const resetForm = () => {
         setClient('');
@@ -102,10 +158,28 @@ function NewAppointmentModal({
         setServiceId('');
         setUseCatalog(true);
         setTime('');
-        setDuration('');
         setPhone('');
         setValue('');
+        setStatus('agendado');
     };
+
+    useEffect(() => {
+        if (visible && mode === "edit" && initialData) {
+            setClient(initialData.client);
+            setClientId(initialData.clientId || '');
+            setUseClientCatalog(false);
+            setService(initialData.service);
+            setServiceId(initialData.serviceId || '');
+            setUseCatalog(false);
+            setTime(initialData.time);
+            setPhone(initialData.phone);
+            setValue(formatCentsToBRL(Math.round(initialData.value * 100)));
+            setStatus(initialData.status);
+        } else if (visible && mode === "create") {
+            resetForm();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [visible, mode, initialData]);
 
     const pickClient = (id: string) => {
         setClientId(id);
@@ -121,22 +195,23 @@ function NewAppointmentModal({
         const match = services.find(s => s._id === id);
         if (match) {
             setService(match.name);
-            setDuration(match.duration);
-            setValue(String(match.value));
+            setValue(formatCentsToBRL(Math.round(match.value * 100)));
         }
     };
 
     const save = () => {
-        if (!client || !service || !time || !value) return;
+        const parsedValue = parseCurrencyInput(value);
+        if (!client || !service || !time || !parsedValue) return;
         onSave({
             client,
             clientId: clientId || undefined,
             service,
             serviceId: serviceId || undefined,
             time,
-            duration: duration || '1h',
+            duration: '1h',
             phone,
-            value: Number(value.replace(',', '.')) || 0,
+            value: parsedValue,
+            status,
         });
         resetForm();
         onClose();
@@ -146,16 +221,18 @@ function NewAppointmentModal({
         <RNModal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
             <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} className="flex-1">
                 <TouchableOpacity className="flex-1" style={{ backgroundColor: 'rgba(0,0,0,0.3)' }} onPress={onClose} />
-                <View className="bg-surface rounded-t-3xl p-6" style={{ elevation: 12 }}>
+                <View className="bg-surface p-6" style={{ elevation: 12, height: modalHeight }}>
                     <View className="flex-row justify-between items-center mb-1">
-                        <Text className="text-lg font-semibold text-primary">Novo Agendamento</Text>
+                        <Text className="text-lg font-semibold text-primary">
+                            {mode === "edit" ? "Editar Agendamento" : "Novo Agendamento"}
+                        </Text>
                         <TouchableOpacity onPress={onClose}>
                             <Ionicons name="close" size={24} color="#9CA3AF" />
                         </TouchableOpacity>
                     </View>
-                    <Text className="text-xs text-gray-400 mb-5">{dayLabel}</Text>
+                    <Text className="text-xs text-gray-400 mb-4">{dayLabel}</Text>
 
-                    <ScrollView showsVerticalScrollIndicator={false} style={{ maxHeight: 380 }}>
+                    <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
                         <View className="flex-row justify-between items-center mb-1.5">
                             <Text className="text-xs text-gray-500 font-medium">Cliente</Text>
                             {clients.length > 0 && (
@@ -167,7 +244,7 @@ function NewAppointmentModal({
                             )}
                         </View>
                         {useClientCatalog && clients.length > 0 ? (
-                            <View className="mb-1">
+                            <View className="mb-4">
                                 <InputBase
                                     label=""
                                     value={clientId}
@@ -177,12 +254,20 @@ function NewAppointmentModal({
                             </View>
                         ) : (
                             <TextInput
-                                className="bg-background border border-borderColor rounded-xl px-4 py-3 text-sm text-inputText mb-3"
-                                placeholder="Nome do cliente"
+                                className="bg-background rounded-xl px-4 py-3 text-sm text-inputText mb-4"
+                                autoCapitalize="characters"
                                 value={client}
-                                onChangeText={setClient}
+                                onChangeText={(t) => setClient(t.toUpperCase())}
                             />
                         )}
+
+                        <Text className="text-xs text-gray-500 mb-1.5 font-medium">Telefone</Text>
+                        <TextInput
+                            className="bg-background rounded-xl px-4 py-3 text-sm text-inputText mb-4"
+                            keyboardType="phone-pad"
+                            value={phone}
+                            onChangeText={(t) => setPhone(formatPhoneNumber(t))}
+                        />
 
                         <View className="flex-row justify-between items-center mb-1.5">
                             <Text className="text-xs text-gray-500 font-medium">Serviço</Text>
@@ -195,7 +280,7 @@ function NewAppointmentModal({
                             )}
                         </View>
                         {useCatalog && services.length > 0 ? (
-                            <View className="mb-1">
+                            <View className="mb-4">
                                 <InputBase
                                     label=""
                                     value={serviceId}
@@ -205,74 +290,94 @@ function NewAppointmentModal({
                             </View>
                         ) : (
                             <TextInput
-                                className="bg-background border border-borderColor rounded-xl px-4 py-3 text-sm text-inputText mb-3"
-                                placeholder="Ex: Manicure, Corte, Pintura"
+                                className="bg-background rounded-xl px-4 py-3 text-sm text-inputText mb-4"
+                                autoCapitalize="characters"
                                 value={service}
-                                onChangeText={setService}
+                                onChangeText={(t) => setService(t.toUpperCase())}
                             />
                         )}
 
-                        <View className="flex-row" style={{ gap: 10 }}>
-                            <View className="flex-1">
-                                <Text className="text-xs text-gray-500 mb-1.5 font-medium">Horário</Text>
-                                <TextInput
-                                    className="bg-background border border-borderColor rounded-xl px-4 py-3 text-sm text-inputText mb-3"
-                                    placeholder="14:00"
-                                    value={time}
-                                    onChangeText={setTime}
-                                />
-                            </View>
-                            <View className="flex-1">
-                                <Text className="text-xs text-gray-500 mb-1.5 font-medium">Duração</Text>
-                                <TextInput
-                                    className="bg-background border border-borderColor rounded-xl px-4 py-3 text-sm text-inputText mb-3"
-                                    placeholder="1h"
-                                    value={duration}
-                                    onChangeText={setDuration}
-                                />
-                            </View>
-                        </View>
-
-                        <Text className="text-xs text-gray-500 mb-1.5 font-medium">Telefone</Text>
+                        <Text className="text-xs text-gray-500 mb-1.5 font-medium">Valor</Text>
                         <TextInput
-                            className="bg-background border border-borderColor rounded-xl px-4 py-3 text-sm text-inputText mb-3"
-                            placeholder="(84) 9 9999-0000"
-                            keyboardType="phone-pad"
-                            value={phone}
-                            onChangeText={(t) => setPhone(formatPhoneNumber(t))}
-                        />
-
-                        <Text className="text-xs text-gray-500 mb-1.5 font-medium">Valor (R$)</Text>
-                        <TextInput
-                            className="bg-background border border-borderColor rounded-xl px-4 py-3 text-sm text-inputText mb-5"
-                            placeholder="0,00"
+                            className="bg-background rounded-xl px-4 py-3 text-sm text-inputText mb-4"
+                            placeholder="R$ 0,00"
                             keyboardType="numeric"
                             value={value}
-                            onChangeText={setValue}
+                            onChangeText={(t) => setValue(maskCurrencyInput(t))}
                         />
-                    </ScrollView>
 
-                    <TouchableOpacity className="bg-primary py-4 rounded-2xl items-center mt-2" onPress={save}>
-                        <Text className="text-white font-semibold text-base">Salvar Agendamento</Text>
-                    </TouchableOpacity>
+                        <Text className="text-xs text-gray-500 mb-1.5 font-medium">Horário</Text>
+                        <TextInput
+                            className="bg-background rounded-xl px-4 py-3 text-sm text-inputText mb-4"
+                            placeholder="00:00"
+                            keyboardType="numeric"
+                            maxLength={5}
+                            value={time}
+                            onChangeText={(t) => setTime(maskTimeInput(t))}
+                        />
+
+                        <Text className="text-xs text-gray-500 mb-1.5 font-medium">Status</Text>
+                        <View className="flex-row flex-wrap mb-4" style={{ gap: 8 }}>
+                            {MANUAL_STATUS_OPTIONS.map(option => {
+                                const style = STATUS_STYLES[option.value];
+                                const isActive = status === option.value;
+                                return (
+                                    <TouchableOpacity
+                                        key={option.value}
+                                        onPress={() => setStatus(option.value)}
+                                        className="rounded-full px-3 py-1.5"
+                                        style={{ backgroundColor: isActive ? style.color : style.bg }}
+                                    >
+                                        <Text style={{ color: isActive ? "#fff" : style.color, fontSize: 12, fontWeight: "700" }}>
+                                            {option.label}
+                                        </Text>
+                                    </TouchableOpacity>
+                                );
+                            })}
+                        </View>
+
+                        <View className="items-center mt-2">
+                            <TouchableOpacity className="rounded-xl bg-secondary p-3 items-center" style={{ minWidth: 200 }} onPress={save}>
+                                <Text className="text-primary font-semibold">
+                                    {mode === "edit" ? "Salvar" : "Salvar Agendamento"}
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    </ScrollView>
                 </View>
             </KeyboardAvoidingView>
         </RNModal>
     );
 }
 
+const mapAppointment = (a: any, fallbackDay?: number): Appointment => ({
+    id: a._id,
+    day: a.date ? new Date(a.date).getUTCDate() : (fallbackDay as number),
+    time: a.time,
+    client: a.clientName,
+    clientId: a.client,
+    service: a.serviceName,
+    serviceId: a.service,
+    duration: a.duration,
+    phone: a.clientPhone || '',
+    value: a.value,
+    status: a.status,
+});
+
 export default function Agenda() {
+    const params = useLocalSearchParams<{ new?: string }>();
     const [appointments, setAppointments] = useState<Appointment[]>([]);
     const [services, setServices] = useState<ServiceOption[]>([]);
     const [clients, setClients] = useState<ClientOption[]>([]);
-    const [displayDate, setDisplayDate] = useState(new Date(2026, 6, 1));
-    const [selectedDay, setSelectedDay] = useState(2);
-    const [showNewAppointmentModal, setShowNewAppointmentModal] = useState(false);
+    const [month, setMonth] = useState(() => new Date().getMonth());
+    const [selectedDay, setSelectedDay] = useState(() => new Date().getDate());
+    const [showAppointmentModal, setShowAppointmentModal] = useState(false);
+    const [editingAppointment, setEditingAppointment] = useState<Appointment | null>(null);
+    const [monthMenuVisible, setMonthMenuVisible] = useState(false);
     const [loading, setLoading] = useState(true);
     const [errorModalVisible, setErrorModalVisible] = useState(false);
 
-    const year = displayDate.getFullYear();
-    const month = displayDate.getMonth();
+    const year = FIXED_YEAR;
 
     useEffect(() => {
         api.get('/services')
@@ -287,20 +392,7 @@ export default function Agenda() {
         setLoading(true);
         api.get('/appointments', { params: { year, month } })
             .then(res => {
-                const mapped: Appointment[] = res.data.map((a: any) => ({
-                    id: a._id,
-                    day: new Date(a.date).getUTCDate(),
-                    time: a.time,
-                    client: a.clientName,
-                    clientId: a.client,
-                    service: a.serviceName,
-                    serviceId: a.service,
-                    duration: a.duration,
-                    phone: a.clientPhone || '',
-                    value: a.value,
-                    status: a.status,
-                }));
-                setAppointments(mapped);
+                setAppointments(res.data.map((a: any) => mapAppointment(a)));
             })
             .catch(() => setErrorModalVisible(true))
             .finally(() => setLoading(false));
@@ -308,54 +400,91 @@ export default function Agenda() {
 
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const firstWeekday = (new Date(year, month, 1).getDay() + 6) % 7;
+    const daysInPrevMonth = new Date(year, month, 0).getDate();
 
-    const calendarCells: (number | null)[] = [
-        ...Array(firstWeekday).fill(null),
-        ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
-    ];
+    type CalendarCell = { day: number; muted: boolean };
+
+    const leadingCells: CalendarCell[] = Array.from({ length: firstWeekday }, (_, i) => ({
+        day: daysInPrevMonth - firstWeekday + 1 + i,
+        muted: true,
+    }));
+    const currentCells: CalendarCell[] = Array.from({ length: daysInMonth }, (_, i) => ({
+        day: i + 1,
+        muted: false,
+    }));
+    const trailingCount = (7 - ((leadingCells.length + currentCells.length) % 7)) % 7;
+    const trailingCells: CalendarCell[] = Array.from({ length: trailingCount }, (_, i) => ({
+        day: i + 1,
+        muted: true,
+    }));
+
+    const calendarCells: CalendarCell[] = [...leadingCells, ...currentCells, ...trailingCells];
 
     const daysWithAppointments = new Set(appointments.map(a => a.day));
 
-    const goToPrevMonth = () => setDisplayDate(new Date(year, month - 1, 1));
-    const goToNextMonth = () => setDisplayDate(new Date(year, month + 1, 1));
+    const goToPrevMonth = () => setMonth(m => (m - 1 + 12) % 12);
+    const goToNextMonth = () => setMonth(m => (m + 1) % 12);
 
     const dayAppointments = appointments
         .filter(a => a.day === selectedDay)
-        .sort((a, b) => a.time.localeCompare(b.time));
+        .sort((a, b) => timeToMinutes(a.time) - timeToMinutes(b.time));
 
-    const dayTotal = dayAppointments.reduce((sum, a) => sum + a.value, 0);
+    const dayTotal = dayAppointments
+        .filter(a => a.status !== "cancelado" && a.status !== "reagendado")
+        .reduce((sum, a) => sum + a.value, 0);
 
-    const addAppointment = async (data: Omit<Appointment, "id" | "day" | "status">) => {
+    const openCreateModal = () => {
+        setEditingAppointment(null);
+        setShowAppointmentModal(true);
+    };
+
+    // Atalho "+ Novo Agendamento" da Home navega pra cá com ?new=1.
+    useEffect(() => {
+        if (params.new) {
+            openCreateModal();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [params.new]);
+
+    const openEditModal = (appointment: Appointment) => {
+        setEditingAppointment(appointment);
+        setShowAppointmentModal(true);
+    };
+
+    const saveAppointment = async (data: Omit<Appointment, "id" | "day">) => {
         try {
-            const isoDate = new Date(Date.UTC(year, month, selectedDay)).toISOString();
-            const response = await api.post('/appointments', {
-                service: data.serviceId,
-                serviceName: data.service,
-                client: data.clientId,
-                clientName: data.client,
-                clientPhone: data.phone,
-                date: isoDate,
-                time: data.time,
-                duration: data.duration,
-                value: data.value,
-            });
-            const created = response.data;
-            setAppointments(prev => [
-                ...prev,
-                {
-                    id: created._id,
-                    day: new Date(created.date).getUTCDate(),
-                    time: created.time,
-                    client: created.clientName,
-                    clientId: created.client,
-                    service: created.serviceName,
-                    serviceId: created.service,
-                    duration: created.duration,
-                    phone: created.clientPhone || '',
-                    value: created.value,
-                    status: created.status,
-                },
-            ]);
+            if (editingAppointment) {
+                const response = await api.put(`/appointments/${editingAppointment.id}`, {
+                    service: data.serviceId,
+                    serviceName: data.service,
+                    client: data.clientId,
+                    clientName: data.client,
+                    clientPhone: data.phone,
+                    time: data.time,
+                    duration: data.duration,
+                    value: data.value,
+                    // "concluído"/"em atendimento" são calculados pelo backend; enviá-los
+                    // quebraria a validação (@IsIn) e derrubaria a edição inteira.
+                    ...(BACKEND_ACCEPTED_STATUSES.includes(data.status) ? { status: data.status } : {}),
+                });
+                const updated = mapAppointment(response.data, editingAppointment.day);
+                setAppointments(prev => prev.map(a => (a.id === editingAppointment.id ? updated : a)));
+            } else {
+                const isoDate = new Date(Date.UTC(year, month, selectedDay)).toISOString();
+                const response = await api.post('/appointments', {
+                    service: data.serviceId,
+                    serviceName: data.service,
+                    client: data.clientId,
+                    clientName: data.client,
+                    clientPhone: data.phone,
+                    date: isoDate,
+                    time: data.time,
+                    duration: data.duration,
+                    value: data.value,
+                    status: data.status,
+                });
+                setAppointments(prev => [...prev, mapAppointment(response.data, selectedDay)]);
+            }
         } catch (error) {
             setErrorModalVisible(true);
         }
@@ -378,27 +507,41 @@ export default function Agenda() {
             </View>
 
             <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-                <View
-                    className="mx-4 mb-5 bg-surface rounded-3xl p-4"
-                    style={{ elevation: 2, shadowColor: "#000", shadowOpacity: 0.06, shadowRadius: 10 }}
+                <Surface
+                    elevation={1}
+                    style={{
+                        marginHorizontal: 16,
+                        marginBottom: 20,
+                        borderRadius: 16,
+                        padding: 16,
+                        borderWidth: 1,
+                        borderColor: "#E5E7EB",
+                        backgroundColor: "#FFFFFF",
+                    }}
                 >
-                    <View className="flex-row items-center justify-between mb-4 px-1">
-                        <TouchableOpacity onPress={goToPrevMonth} className="p-1">
-                            <Ionicons name="chevron-back" size={20} color="#374151" />
-                        </TouchableOpacity>
-                        <View className="flex-row" style={{ gap: 8 }}>
-                            <View className="flex-row items-center bg-background rounded-lg px-3 py-1.5" style={{ gap: 4 }}>
-                                <Text className="text-primary font-bold text-base">{MONTH_NAMES[month]}</Text>
-                                <Ionicons name="chevron-down" size={14} color="#1E3A8A" />
-                            </View>
-                            <View className="flex-row items-center bg-background rounded-lg px-3 py-1.5" style={{ gap: 4 }}>
-                                <Text className="text-primary font-bold text-base">{year}</Text>
-                                <Ionicons name="chevron-down" size={14} color="#1E3A8A" />
-                            </View>
+                    <View className="flex-row items-center justify-between mb-4">
+                        <IconButton
+                            icon={() => <Ionicons name="chevron-back" size={18} color="#374151" />}
+                            size={20}
+                            onPress={goToPrevMonth}
+                        />
+                        <View className="flex-row items-center" style={{ gap: 6 }}>
+                            <TouchableRipple onPress={() => setMonthMenuVisible(true)} borderless style={{ borderRadius: 8 }}>
+                                <View className="flex-row items-center px-2 py-1" style={{ gap: 2 }}>
+                                    <Text className="text-inputText font-semibold text-base" style={{ textTransform: "capitalize" }}>
+                                        {MONTH_NAMES[month]}
+                                    </Text>
+                                    <Ionicons name="chevron-down" size={14} color="#1E3A8A" />
+                                </View>
+                            </TouchableRipple>
+
+                            <Text className="text-inputText font-semibold text-base">{year}</Text>
                         </View>
-                        <TouchableOpacity onPress={goToNextMonth} className="p-1">
-                            <Ionicons name="chevron-forward" size={20} color="#374151" />
-                        </TouchableOpacity>
+                        <IconButton
+                            icon={() => <Ionicons name="chevron-forward" size={18} color="#374151" />}
+                            size={20}
+                            onPress={goToNextMonth}
+                        />
                     </View>
 
                     <View className="flex-row mb-2">
@@ -410,41 +553,64 @@ export default function Agenda() {
                     </View>
 
                     <View className="flex-row flex-wrap">
-                        {calendarCells.map((day, i) => {
-                            const isSelected = day === selectedDay;
-                            const hasAppointment = day !== null && daysWithAppointments.has(day);
+                        {calendarCells.map((cell, i) => {
+                            const isSelected = !cell.muted && cell.day === selectedDay;
+                            const hasAppointment = !cell.muted && daysWithAppointments.has(cell.day);
                             return (
                                 <View key={i} style={{ width: `${100 / 7}%` }} className="items-center mb-2">
-                                    {day ? (
-                                        <TouchableOpacity
-                                            onPress={() => setSelectedDay(day)}
-                                            className="items-center justify-center rounded-full"
-                                            style={{ width: 34, height: 34, backgroundColor: isSelected ? "#1E3A8A" : "transparent" }}
-                                        >
-                                            <Text className={isSelected ? "text-white font-bold" : "text-inputText"}>{day}</Text>
-                                            {hasAppointment && !isSelected && (
-                                                <View
-                                                    className="rounded-full bg-primary"
-                                                    style={{ width: 4, height: 4, position: "absolute", bottom: 2 }}
-                                                />
-                                            )}
-                                        </TouchableOpacity>
+                                    {cell.muted ? (
+                                        <View className="items-center justify-center" style={{ width: 34, height: 34 }}>
+                                            <Text style={{ color: "#D1D5DB" }}>{cell.day}</Text>
+                                        </View>
                                     ) : (
-                                        <View style={{ width: 34, height: 34 }} />
+                                        <TouchableRipple
+                                            onPress={() => setSelectedDay(cell.day)}
+                                            borderless
+                                            style={{ width: 34, height: 34, borderRadius: 17 }}
+                                        >
+                                            <View
+                                                className="items-center justify-center"
+                                                style={{
+                                                    width: 34,
+                                                    height: 34,
+                                                    borderRadius: 17,
+                                                    borderWidth: isSelected ? 1.5 : 0,
+                                                    borderColor: "#1E3A8A",
+                                                }}
+                                            >
+                                                <Text className={isSelected ? "text-primary font-bold" : "text-inputText"}>{cell.day}</Text>
+                                                {hasAppointment && !isSelected && (
+                                                    <View
+                                                        className="rounded-full bg-primary"
+                                                        style={{ width: 4, height: 4, position: "absolute", bottom: 2 }}
+                                                    />
+                                                )}
+                                            </View>
+                                        </TouchableRipple>
                                     )}
                                 </View>
                             );
                         })}
                     </View>
+                </Surface>
+
+                <View className="mx-4 mb-5">
+                    <TouchableOpacity
+                        className="flex-row items-center justify-center border border-dashed border-primary rounded-2xl p-4"
+                        onPress={openCreateModal}
+                    >
+                        <Ionicons name="add-circle-outline" size={20} color="#1E3A8A" />
+                        <Text className="text-primary font-medium ml-2">Novo Agendamento</Text>
+                    </TouchableOpacity>
                 </View>
 
                 <View className="mx-4" style={{ paddingBottom: 100 }}>
                     {loading ? (
-                        <View className="bg-surface rounded-2xl p-8 items-center" style={{ elevation: 1 }}>
+                        <View className="bg-surface rounded-2xl p-8 items-center" style={CARD_SHADOW}>
                             <ActivityIndicator size="large" color="#1E3A8A" />
                         </View>
                     ) : dayAppointments.length === 0 ? (
-                        <View className="bg-surface rounded-2xl p-8 items-center" style={{ elevation: 1 }}>
+                        <View className="bg-surface rounded-2xl p-8 items-center" style={CARD_SHADOW}>
                             <Ionicons name="calendar-outline" size={40} color="#D1D5DB" />
                             <Text className="text-gray-400 text-sm mt-2">Nenhum atendimento neste dia</Text>
                         </View>
@@ -460,38 +626,42 @@ export default function Agenda() {
                                         )}
                                     </View>
 
-                                    <View
+                                    <TouchableOpacity
                                         className="flex-1 bg-surface rounded-2xl p-4"
+                                        activeOpacity={0.7}
+                                        onPress={() => openEditModal(app)}
                                         style={{
-                                            elevation: 1,
-                                            shadowColor: "#000",
-                                            shadowOpacity: 0.05,
-                                            shadowRadius: 6,
+                                            ...CARD_SHADOW,
                                             borderLeftWidth: 3,
                                             borderLeftColor: status.color,
                                         }}
                                     >
                                         <View className="flex-row justify-between items-start mb-1">
                                             <Text className="text-base font-semibold text-inputText">{app.client}</Text>
-                                            <View className="rounded-full px-2.5 py-0.5" style={{ backgroundColor: status.bg }}>
-                                                <Text style={{ color: status.color, fontSize: 10, fontWeight: "700" }}>{status.label}</Text>
+                                            <View className="flex-row items-center" style={{ gap: 6 }}>
+                                                <View className="rounded-full px-2.5 py-0.5" style={{ backgroundColor: status.bg }}>
+                                                    <Text style={{ color: status.color, fontSize: 10, fontWeight: "700" }}>{status.label}</Text>
+                                                </View>
+                                                <TouchableOpacity
+                                                    onPress={() => openEditModal(app)}
+                                                    hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                                                >
+                                                    <Ionicons name="ellipsis-vertical" size={16} color="#9CA3AF" />
+                                                </TouchableOpacity>
                                             </View>
                                         </View>
-                                        <Text className="text-sm text-gray-400 mb-2">{app.service}</Text>
+                                        <View className="flex-row items-center mb-2" style={{ gap: 3 }}>
+                                            <Ionicons name="call-outline" size={13} color="#9CA3AF" />
+                                            <Text className="text-xs text-gray-400">{app.phone}</Text>
+                                        </View>
                                         <View className="flex-row justify-between items-center">
-                                            <View className="flex-row items-center" style={{ gap: 10 }}>
-                                                <View className="flex-row items-center" style={{ gap: 3 }}>
-                                                    <Ionicons name="time-outline" size={13} color="#9CA3AF" />
-                                                    <Text className="text-xs text-gray-400">{app.duration}</Text>
-                                                </View>
-                                                <View className="flex-row items-center" style={{ gap: 3 }}>
-                                                    <Ionicons name="call-outline" size={13} color="#9CA3AF" />
-                                                    <Text className="text-xs text-gray-400">{app.phone}</Text>
-                                                </View>
-                                            </View>
+                                            <Text className="text-sm">
+                                                <Text className="font-semibold text-inputText">Serviço: </Text>
+                                                <Text className="text-gray-400">{app.service}</Text>
+                                            </Text>
                                             <Text className="text-sm font-bold text-primary">{fmtCurrency(app.value)}</Text>
                                         </View>
-                                    </View>
+                                    </TouchableOpacity>
                                 </View>
                             );
                         })
@@ -499,21 +669,60 @@ export default function Agenda() {
                 </View>
             </ScrollView>
 
-            <TouchableOpacity
-                className="absolute items-center justify-center rounded-full bg-primary"
-                style={{ width: 56, height: 56, right: 20, bottom: 84, elevation: 4, shadowColor: "#000", shadowOpacity: 0.2, shadowRadius: 8 }}
-                onPress={() => setShowNewAppointmentModal(true)}
+            <RNModal
+                visible={monthMenuVisible}
+                transparent
+                animationType="fade"
+                onRequestClose={() => setMonthMenuVisible(false)}
             >
-                <Ionicons name="add" size={28} color="#fff" />
-            </TouchableOpacity>
+                <TouchableOpacity
+                    className="flex-1 justify-center items-center px-10"
+                    style={{ backgroundColor: "rgba(0,0,0,0.3)" }}
+                    activeOpacity={1}
+                    onPress={() => setMonthMenuVisible(false)}
+                >
+                    <TouchableOpacity activeOpacity={1} onPress={() => {}} style={{ width: "100%", maxWidth: 240 }}>
+                        <View
+                            className="bg-surface rounded-2xl"
+                            style={{ elevation: 12, maxHeight: 340, overflow: "hidden" }}
+                        >
+                            <ScrollView showsVerticalScrollIndicator={false}>
+                                {MONTH_NAMES.map((name, i) => {
+                                    const isActive = i === month;
+                                    return (
+                                        <TouchableOpacity
+                                            key={name}
+                                            onPress={() => { setMonth(i); setMonthMenuVisible(false); }}
+                                            className="px-5 py-3"
+                                            style={{ backgroundColor: isActive ? "#DBEAFE" : "transparent" }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    textTransform: "capitalize",
+                                                    color: isActive ? "#1E3A8A" : "#1F2937",
+                                                    fontWeight: isActive ? "700" : "400",
+                                                }}
+                                            >
+                                                {name}
+                                            </Text>
+                                        </TouchableOpacity>
+                                    );
+                                })}
+                            </ScrollView>
+                        </View>
+                    </TouchableOpacity>
+                </TouchableOpacity>
+            </RNModal>
 
-            <NewAppointmentModal
-                visible={showNewAppointmentModal}
-                onClose={() => setShowNewAppointmentModal(false)}
-                onSave={addAppointment}
+            <AppointmentFormModal
+                visible={showAppointmentModal}
+                onClose={() => setShowAppointmentModal(false)}
+                onSave={saveAppointment}
                 dayLabel={`Dia ${selectedDay} de ${MONTH_NAMES[month]} ${year}`}
                 services={services}
                 clients={clients}
+                mode={editingAppointment ? "edit" : "create"}
+                initialData={editingAppointment || undefined}
             />
 
             <Modal

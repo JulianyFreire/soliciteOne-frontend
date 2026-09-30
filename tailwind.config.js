@@ -14,9 +14,13 @@ module.exports = {
         background: "#F5F6F8",   
         surface: "#FFFFFF",      
    
-        inputText: "#1F2937",   
-        inputPlaceholder: "#9CA3AF", 
+        inputText: "#1F2937",
+        inputPlaceholder: "#9CA3AF",
         borderColor: "#C8CBD0",
+        InputBorder: "#C8CBD0",
+        inputBg: "#FFFFFF",
+        success: "#059669",
+        error: "#DC2626",
       },
       fontWeight: {
         thin: 100,

@@ -84,8 +84,8 @@ export default function Perfil() {
 
     return (
         <View className="flex-1 bg-background">
-            <Header title="Minha conta"/>
-            <ScrollView contentContainerStyle={{ paddingBottom: 24 }}>
+            <Header title="Minha conta" showBack={false} />
+            <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
                 <View className="w-full max-w-md self-center px-6 mt-6">
                     <View
                         className="bg-white rounded-2xl p-5"
@@ -138,22 +138,6 @@ export default function Perfil() {
                             </View>
                         )}
                     </View>
-
-                    <TouchableOpacity
-                        className="flex-row items-center self-center border border-InputBorder rounded-full px-5 py-2 mt-8"
-                        onPress={() => router.push('/services')}
-                    >
-                        <Ionicons name="pricetags-outline" size={18} color="#1E3A8A" />
-                        <Text className="text-primary font-medium ml-2">Meus Serviços</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        className="flex-row items-center self-center border border-InputBorder rounded-full px-5 py-2 mt-3"
-                        onPress={() => router.push('/clients')}
-                    >
-                        <Ionicons name="people-outline" size={18} color="#1E3A8A" />
-                        <Text className="text-primary font-medium ml-2">Meus Clientes</Text>
-                    </TouchableOpacity>
 
                     <TouchableOpacity
                         className="flex-row items-center self-center border border-InputBorder rounded-full px-5 py-2 mt-3"

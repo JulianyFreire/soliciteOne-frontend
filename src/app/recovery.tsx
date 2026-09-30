@@ -4,6 +4,7 @@ import { useState } from "react";
 import axios from "axios";
 import Modal from "../components/Modal";
 import { Header } from "../components/Header";
+import { CARD_SHADOW } from "../styles/shadow";
 
 export default function RecuperarSenha() {
 
@@ -56,10 +57,8 @@ export default function RecuperarSenha() {
             <View className="flex-1">
                 <Header title="Recuperação de senha" />
                 <View className="w-full max-w-md self-center px-6">
-                    <View>
-                        <Text className="text-xl font-medium text-inputText p-2">
-                            E-mail<Text className="text-red-500">*</Text>
-                        </Text>
+                    <View className="bg-surface rounded-2xl p-6" style={CARD_SHADOW}>
+                        <Text className="text-sm font-medium text-inputText p-2">E-mail</Text>
                         <TextInput
                             className={`bg-background border border-borderColor rounded-xl p-3 mb-2 text-inputText ${borderClass('email')}`}
                             value={email}
@@ -78,7 +77,7 @@ export default function RecuperarSenha() {
                             className="w-full rounded-xl bg-secondary p-3 items-center mb-3"
                             onPress={sendMail}
                         >
-                            <Text className="text-primary font-semibold text-xl">Continuar</Text>
+                            <Text className="text-primary font-semibold text-base">Continuar</Text>
                         </TouchableOpacity>
                     </View>
                 )}

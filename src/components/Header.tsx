@@ -4,15 +4,18 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 
 type HeaderProps = {
   title: string;
+  showBack?: boolean;
 };
 
-export function Header({ title }: HeaderProps) {
+export function Header({ title, showBack = true }: HeaderProps) {
   return (
     <View className="w-full max-w-md self-center px-6 pt-4 pb-2">
       <View className="relative flex-row items-center" style={{ height: 150 }}>
-        <TouchableOpacity onPress={() => router.push('/login')}>
-          <Ionicons name="arrow-back" size={36} color="#90CAF9" />
-        </TouchableOpacity>
+        {showBack && (
+          <TouchableOpacity onPress={() => router.push('/login')}>
+            <Ionicons name="arrow-back" size={36} color="#90CAF9" />
+          </TouchableOpacity>
+        )}
 
         <View className="absolute inset-0 items-center justify-center" pointerEvents="none">
           <Image

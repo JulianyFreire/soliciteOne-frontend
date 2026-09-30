@@ -6,6 +6,7 @@ import Modal from "../components/Modal";
 import axios from "axios";
 import { useLocalSearchParams } from "expo-router";
 import { Header } from "../components/Header";
+import { CARD_SHADOW } from "../styles/shadow";
 
 export default function NovaSenha() {
 
@@ -70,10 +71,9 @@ export default function NovaSenha() {
             <View className="flex-1">
                 <Header title="Crie uma nova senha" />
                 <View className="w-full max-w-md self-center px-6">
+                    <View className="bg-surface rounded-2xl p-6" style={CARD_SHADOW}>
                     <View>
-                        <Text className="text-xl font-medium text-inputText p-2">
-                            Código<Text className="text-red-500">*</Text>
-                        </Text>
+                        <Text className="text-sm font-medium text-inputText p-2">Código</Text>
                         <TextInput
                             className={`bg-background border border-borderColor rounded-xl p-3 mb-2 text-inputText ${borderClass('code')}`}
                             value={code}
@@ -84,8 +84,7 @@ export default function NovaSenha() {
                     </View>
 
                     <View>
-                        <Text className="text-xl font-medium text-inputText p-2">
-                            Nova Senha<Text className="text-red-500">*</Text></Text>
+                        <Text className="text-sm font-medium text-inputText p-2">Nova Senha</Text>
                         <View className="relative">
                             <TextInput
                                 className={`bg-background border border-borderColor rounded-xl p-3 mb-2 text-inputText ${borderClass('password')}`}
@@ -98,6 +97,9 @@ export default function NovaSenha() {
                             <TouchableOpacity
                                 onPress={() => setIsPasswordVisible(!isPasswordVisible)}
                                 className="absolute right-4 top-6 -translate-y-1/2"
+                                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                                accessibilityLabel={isPasswordVisible ? 'Ocultar senha' : 'Mostrar senha'}
+                                accessibilityRole="button"
                             >
                                 <Ionicons
                                     name={isPasswordVisible ? 'eye' : 'eye-off'}
@@ -109,9 +111,7 @@ export default function NovaSenha() {
                     </View>
 
                     <View>
-                        <Text className="text-xl font-medium text-inputText p-2">
-                            Confirmar Senha<Text className="text-red-500">*</Text></Text>
-                        <View className="relative"></View>
+                        <Text className="text-sm font-medium text-inputText p-2">Confirmar Senha</Text>
                         <View className="relative">
                             <TextInput
                                 className={`bg-background border border-borderColor rounded-xl p-3 mb-2 text-inputText ${borderClass('confirmPassword')}`}
@@ -124,6 +124,9 @@ export default function NovaSenha() {
                             <TouchableOpacity
                                 onPress={() => setIsConfirmPasswordVisible(!isConfirmPasswordVisible)}
                                 className="absolute right-4 top-6 -translate-y-1/2"
+                                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                                accessibilityLabel={isConfirmPasswordVisible ? 'Ocultar senha' : 'Mostrar senha'}
+                                accessibilityRole="button"
                             >
                                 <Ionicons
                                     name={isConfirmPasswordVisible ? 'eye' : 'eye-off'}
@@ -132,6 +135,7 @@ export default function NovaSenha() {
                                 />
                             </TouchableOpacity>
                         </View>
+                    </View>
                     </View>
                 </View>
 
@@ -143,7 +147,7 @@ export default function NovaSenha() {
                             className="w-full rounded-xl bg-secondary p-3 items-center mb-3"
                             onPress={updatePassword}
                         >
-                            <Text className="text-primary font-semibold text-xl">Atualizar senha</Text>
+                            <Text className="text-primary font-semibold text-base">Atualizar senha</Text>
                         </TouchableOpacity>
                     </View>
                 )}

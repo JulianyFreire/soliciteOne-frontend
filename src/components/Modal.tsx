@@ -31,12 +31,25 @@ const Modal: React.FC<ModalProps> = ({ isVisible, title, message, onClose, type 
   return (
     <RNModal transparent visible={isVisible} animationType="fade" onRequestClose={onClose}>
       <TouchableOpacity
-        className="flex-1 justify-start items-center bg-black/50 px-6 pt-16"
+        className="flex-1 justify-start items-center bg-black/30 px-6 pt-16"
         activeOpacity={1}
         onPress={onClose}
       >
         <TouchableOpacity activeOpacity={1} onPress={() => {}} className="w-full max-w-sm">
-          <View className="bg-surface rounded-3xl p-6 items-center shadow-2xl">
+          <View
+            className="bg-surface rounded-3xl p-6 items-center shadow-2xl"
+            accessibilityRole="alert"
+          >
+            <TouchableOpacity
+              onPress={onClose}
+              className="absolute right-3 top-3 p-1"
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              accessibilityLabel="Fechar"
+              accessibilityRole="button"
+            >
+              <Ionicons name="close" size={20} color="#9CA3AF" />
+            </TouchableOpacity>
+
             <View className={`w-14 h-14 rounded-full items-center justify-center mb-4 ${bgClass}`}>
               <Ionicons name={icon} size={30} color={color} />
             </View>

@@ -6,6 +6,7 @@ import { NavbarGestao } from "../components/Navbar";
 import { InputBase } from "../components/Input";
 import Modal from "../components/Modal";
 import api from "../services/api";
+import { CARD_SHADOW } from "../styles/shadow";
 
 interface Client {
     _id: string;
@@ -98,7 +99,7 @@ export default function Clientes() {
                             <ActivityIndicator size="large" color="#1E3A8A" />
                         </View>
                     ) : clients.length === 0 ? (
-                        <View className="bg-surface rounded-2xl p-8 items-center" style={{ elevation: 1 }}>
+                        <View className="bg-surface rounded-2xl p-8 items-center" style={CARD_SHADOW}>
                             <Ionicons name="people-outline" size={40} color="#D1D5DB" />
                             <Text className="text-gray-400 text-sm mt-2">Você ainda não cadastrou nenhum cliente</Text>
                         </View>
@@ -107,13 +108,18 @@ export default function Clientes() {
                             <View
                                 key={client._id}
                                 className="flex-row justify-between items-center bg-surface rounded-2xl p-4 mb-3"
-                                style={{ elevation: 1, shadowColor: "#000", shadowOpacity: 0.05, shadowRadius: 6 }}
+                                style={CARD_SHADOW}
                             >
                                 <View className="flex-1">
                                     <Text className="text-base font-semibold text-inputText">{client.name}</Text>
                                     <Text className="text-xs text-gray-400 mt-0.5">{client.phone}</Text>
                                 </View>
-                                <TouchableOpacity onPress={() => remove(client._id)}>
+                                <TouchableOpacity
+                                    onPress={() => remove(client._id)}
+                                    hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                                    accessibilityLabel={`Excluir cliente ${client.name}`}
+                                    accessibilityRole="button"
+                                >
                                     <Ionicons name="trash-outline" size={20} color="#DC2626" />
                                 </TouchableOpacity>
                             </View>
@@ -150,7 +156,7 @@ export default function Clientes() {
 
                         <View className="flex-row mt-2" style={{ gap: 10 }}>
                             <TouchableOpacity
-                                className="flex-1 rounded-xl border border-InputBorder p-3 items-center"
+                                className="flex-1 rounded-xl border border-borderColor p-3 items-center"
                                 onPress={() => { resetForm(); setShowModal(false); }}
                                 disabled={saving}
                             >
