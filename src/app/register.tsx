@@ -41,7 +41,7 @@ export default function Cadastro() {
         
         try {
             setLoading(true);
-            const response = await axios.post('https://soliciteone-backend.onrender.com/users', {
+            const response = await axios.post('/users', {
                 name,
                 profession,
                 email,
