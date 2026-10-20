@@ -71,7 +71,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = async (email: string, password: string) => {
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:3000/users/login", {
+      const response = await axios.post("https://soliciteone-backend.onrender.com/users/login", {
         email,
         password,
       });
@@ -102,7 +102,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (!user) return;
     try {
       const token = await AsyncStorage.getItem("token");
-      await axios.put(`http://localhost:3000/users/${user._id}`, data, {
+      await axios.put(`https://soliciteone-backend.onrender.com/users/${user._id}`, data, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUser({ ...user, ...data });
