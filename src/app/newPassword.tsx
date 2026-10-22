@@ -3,10 +3,10 @@ import { router } from 'expo-router';
 import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import Modal from "../components/Modal";
-import axios from "axios";
 import { useLocalSearchParams } from "expo-router";
 import { Header } from "../components/Header";
 import { CARD_SHADOW } from "../styles/shadow";
+import api from "../services/api";
 
 export default function NovaSenha() {
 
@@ -47,14 +47,13 @@ export default function NovaSenha() {
 
         try {
             setLoading(true);
-            const response = await axios.post('https://api.soliciteapp.com.br/users/confirm-recovery-password', {
+            await api.post('/users/confirm-recovery-password', {
                 email,
                 code,
                 password
             });
 
             router.push("/login");
-            console.log(password);
         } catch (error) {
             console.error("Erro ao enviar email:", error);
             setModalTitle("Erro");
