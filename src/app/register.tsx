@@ -1,12 +1,12 @@
 import { ActivityIndicator, Image, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import { useState } from "react";
-import axios from 'axios';
 import Modal from "../components/Modal";
 import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import { Header } from "../components/Header";
 import { CARD_SHADOW } from "../styles/shadow";
+import api from "../services/api";
 
 export default function Cadastro() {
 
@@ -31,6 +31,14 @@ export default function Cadastro() {
 
     const handleCadastro = async () => {
 
+        if (!name.trim() || !profession.trim() || !email.trim() || !document.trim() || !phone.trim() || !password || !confirmPassword) {
+            setModalTitle("Campos obrigatórios");
+            setModalMessage("Preencha todos os campos para criar sua conta.");
+            setModalType("error");
+            setIsModalVisible(true);
+            return;
+        }
+
         if (password !== confirmPassword) {
             setModalTitle("Senhas diferentes");
             setModalMessage("As senhas digitadas devem ser iguais.");
@@ -41,7 +49,7 @@ export default function Cadastro() {
         
         try {
             setLoading(true);
-            const response = await axios.post('/users', {
+            await api.post('/users', {
                 name,
                 profession,
                 email,
@@ -54,15 +62,11 @@ export default function Cadastro() {
             setModalMessage("Cadastro realizado com sucesso!");
             setModalType("success");
             setIsModalVisible(true);
-            
-            console.log('Cadastro com sucesso');
-            // Exibir mensagem de sucesso
-            console.log(response.data);
-            router.push('/login');
+            // Navigate after the success message closes.
         } catch (error) {
             // Exibir mensagem de erro
-            setModalTitle("Campos obrigatórios não preenchidos");
-            setModalMessage("Por favor, preencha todos os campos para continuar o cadastro.");
+            setModalTitle("Cadastro não realizado");
+            setModalMessage("Não foi possível criar sua conta. Confira os dados e tente novamente.");
             setModalType("error");
             setIsModalVisible(true);
             console.log('Erro no cadastro');
@@ -225,7 +229,10 @@ export default function Cadastro() {
                 isVisible={isModalVisible}
                 title={modalTitle}
                 message={modalMessage}
-                onClose={() => setIsModalVisible(false)}
+                onClose={() => {
+                    setIsModalVisible(false);
+                    if (modalType === 'success') router.replace('/login');
+                }}
             />
         </ScrollView>
     );

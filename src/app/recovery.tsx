@@ -1,10 +1,10 @@
 import { Text, TextInput, View, TouchableOpacity, ActivityIndicator, ScrollView } from "react-native";
 import { router } from 'expo-router';
 import { useState } from "react";
-import axios from "axios";
 import Modal from "../components/Modal";
 import { Header } from "../components/Header";
 import { CARD_SHADOW } from "../styles/shadow";
+import api from "../services/api";
 
 export default function RecuperarSenha() {
 
@@ -30,7 +30,7 @@ export default function RecuperarSenha() {
 
         setLoading(true);
         try {
-            const response = await axios.post('https://api.soliciteapp.com.br/users/recovery-password', {
+            await api.post('/users/recovery-password', {
                 email
             });
 
@@ -40,7 +40,6 @@ export default function RecuperarSenha() {
                 params: { email },
             });
 
-            console.log(email);
         } catch (error) {
             console.error("Erro ao enviar email:", error);
             setModalTitle("Erro");
