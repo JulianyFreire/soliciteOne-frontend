@@ -54,8 +54,6 @@ const MONTH_NAMES = [
 
 const WEEKDAYS = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
 
-const FIXED_YEAR = 2026;
-
 const STATUS_STYLES: Record<Appointment["status"], { label: string; color: string; bg: string }> = {
     agendado: { label: "Agendado", color: "#1E3A8A", bg: "#DBEAFE" },
     confirmado: { label: "Confirmado", color: "#059669", bg: "#D1FAE5" },
@@ -148,6 +146,7 @@ function AppointmentFormModal({
     const [time, setTime] = useState('');
     const [phone, setPhone] = useState('');
     const [value, setValue] = useState('');
+    const [duration, setDuration] = useState('1h');
     const [status, setStatus] = useState<Appointment["status"]>('agendado');
 
     const resetForm = () => {
@@ -160,6 +159,7 @@ function AppointmentFormModal({
         setTime('');
         setPhone('');
         setValue('');
+        setDuration('1h');
         setStatus('agendado');
     };
 
@@ -174,6 +174,7 @@ function AppointmentFormModal({
             setTime(initialData.time);
             setPhone(initialData.phone);
             setValue(formatCentsToBRL(Math.round(initialData.value * 100)));
+            setDuration(initialData.duration || '1h');
             setStatus(initialData.status);
         } else if (visible && mode === "create") {
             resetForm();
@@ -196,6 +197,7 @@ function AppointmentFormModal({
         if (match) {
             setService(match.name);
             setValue(formatCentsToBRL(Math.round(match.value * 100)));
+            setDuration(match.duration || '1h');
         }
     };
 
@@ -208,7 +210,7 @@ function AppointmentFormModal({
             service,
             serviceId: serviceId || undefined,
             time,
-            duration: '1h',
+            duration: duration || '1h',
             phone,
             value: parsedValue,
             status,
@@ -369,15 +371,18 @@ export default function Agenda() {
     const [appointments, setAppointments] = useState<Appointment[]>([]);
     const [services, setServices] = useState<ServiceOption[]>([]);
     const [clients, setClients] = useState<ClientOption[]>([]);
-    const [month, setMonth] = useState(() => new Date().getMonth());
+    const [currentMonthDate, setCurrentMonthDate] = useState(() => {
+        const now = new Date();
+        return new Date(now.getFullYear(), now.getMonth(), 1);
+    });
+    const month = currentMonthDate.getMonth();
+    const year = currentMonthDate.getFullYear();
     const [selectedDay, setSelectedDay] = useState(() => new Date().getDate());
     const [showAppointmentModal, setShowAppointmentModal] = useState(false);
     const [editingAppointment, setEditingAppointment] = useState<Appointment | null>(null);
     const [monthMenuVisible, setMonthMenuVisible] = useState(false);
     const [loading, setLoading] = useState(true);
     const [errorModalVisible, setErrorModalVisible] = useState(false);
-
-    const year = FIXED_YEAR;
 
     useEffect(() => {
         api.get('/services')
@@ -422,8 +427,13 @@ export default function Agenda() {
 
     const daysWithAppointments = new Set(appointments.map(a => a.day));
 
-    const goToPrevMonth = () => setMonth(m => (m - 1 + 12) % 12);
-    const goToNextMonth = () => setMonth(m => (m + 1) % 12);
+    const selectMonth = (nextMonth: number) => {
+        const nextDate = new Date(year, nextMonth, 1);
+        setCurrentMonthDate(nextDate);
+        setSelectedDay(day => Math.min(day, new Date(nextDate.getFullYear(), nextDate.getMonth() + 1, 0).getDate()));
+    };
+    const goToPrevMonth = () => selectMonth(month - 1);
+    const goToNextMonth = () => selectMonth(month + 1);
 
     const dayAppointments = appointments
         .filter(a => a.day === selectedDay)
@@ -692,7 +702,7 @@ export default function Agenda() {
                                     return (
                                         <TouchableOpacity
                                             key={name}
-                                            onPress={() => { setMonth(i); setMonthMenuVisible(false); }}
+                                            onPress={() => { selectMonth(i); setMonthMenuVisible(false); }}
                                             className="px-5 py-3"
                                             style={{ backgroundColor: isActive ? "#DBEAFE" : "transparent" }}
                                         >
