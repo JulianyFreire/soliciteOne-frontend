@@ -1,11 +1,11 @@
 import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
 import { router } from "expo-router";
 import Modal from "../components/Modal";
+import api from "../services/api";
 
 interface User {
-  _id: number;
+  _id: number | string;
   name: string;
   email: string;
   document: string;
@@ -25,15 +25,9 @@ interface AuthContextType {
 const defaultValue: AuthContextType = {
   isLoggedIn: false,
   user: null,
-  login: async () => {
-    throw new Error("login não implementado");
-  },
-  logout: async () => {
-    throw new Error("logout não implementado");
-  },
-  updateUser: async () => {
-    throw new Error("updateUser não implementado");
-  },
+  login: async () => { throw new Error("login não implementado"); },
+  logout: async () => { throw new Error("logout não implementado"); },
+  updateUser: async () => { throw new Error("updateUser não implementado"); },
   loading: false,
 };
 
@@ -51,48 +45,50 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const restoreSession = async () => {
       try {
-        const token = await AsyncStorage.getItem("token");
-        const savedEmail = await AsyncStorage.getItem("email");
-        const savedPassword = await AsyncStorage.getItem("password");
-
-        if (token && savedEmail && savedPassword) {
-          await login(savedEmail, savedPassword);
-        } else {
-          setLoading(false);
+        const [token, savedUser] = await Promise.all([
+          AsyncStorage.getItem("token"),
+          AsyncStorage.getItem("user"),
+        ]);
+        // Remove credentials saved by older versions; the password is never needed to restore the token session.
+        await AsyncStorage.multiRemove(["email", "password"]);
+        if (token) {
+          setUser(savedUser ? JSON.parse(savedUser) : null);
+          setIsLoggedIn(true);
         }
       } catch (error) {
         console.error("Erro ao restaurar sessão:", error);
+        await AsyncStorage.multiRemove(["token", "user", "email", "password"]);
+        setUser(null);
+        setIsLoggedIn(false);
+      } finally {
         setLoading(false);
       }
     };
-    restoreSession();
+    void restoreSession();
   }, []);
 
   const login = async (email: string, password: string) => {
     setLoading(true);
     try {
-      const response = await axios.post("https://soliciteone-backend.onrender.com/users/login", {
-        email,
-        password,
-      });
+      const response = await api.post("/users/login", { email, password });
       const { token, user } = response.data;
+      await AsyncStorage.multiRemove(["email", "password"]);
       await AsyncStorage.setItem("token", token);
-      await AsyncStorage.setItem("email", email);
-      await AsyncStorage.setItem("password", password);
+      await AsyncStorage.setItem("user", JSON.stringify(user));
       setUser(user);
       setIsLoggedIn(true);
       setModalTitle("Sucesso");
       setModalMessage("Login realizado com sucesso!");
       setModalType("success");
       setIsModalVisible(true);
-      router.push("/");
+      router.replace("/");
     } catch (error) {
       console.error("Erro no login:", error);
       setModalTitle("Email ou senha incorretos");
       setModalMessage("Verifique suas informações e tente novamente.");
       setModalType("error");
       setIsModalVisible(true);
-      router.push("/login");
+      throw error;
     } finally {
       setLoading(false);
     }
@@ -101,11 +97,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const updateUser = async (data: Partial<User>) => {
     if (!user) return;
     try {
-      const token = await AsyncStorage.getItem("token");
-      await axios.put(`https://soliciteone-backend.onrender.com/users/${user._id}`, data, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setUser({ ...user, ...data });
+      await api.put(`/users/${user._id}`, data);
+      const updatedUser = { ...user, ...data };
+      setUser(updatedUser);
+      await AsyncStorage.setItem("user", JSON.stringify(updatedUser));
       setModalTitle("Sucesso");
       setModalMessage("Dados atualizados com sucesso!");
       setModalType("success");
@@ -121,12 +116,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const logout = async () => {
-    await AsyncStorage.removeItem("token");
-    await AsyncStorage.removeItem("email");
-    await AsyncStorage.removeItem("password");
+    await AsyncStorage.multiRemove(["token", "user", "email", "password"]);
     setUser(null);
     setIsLoggedIn(false);
-    router.push("/");
+    router.replace("/login");
   };
 
   return (
