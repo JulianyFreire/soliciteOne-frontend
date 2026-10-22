@@ -44,7 +44,7 @@ export default function Servicos() {
 
     const loadServices = () => {
         setLoading(true);
-        api.get('https://soliciteone-backend.onrender.com/services')
+        api.get('/services')
             .then(res => setServices(res.data))
             .catch(() => {
                 setFeedbackTitle('Erro');
